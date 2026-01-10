@@ -1,0 +1,68 @@
+<%- include('../partials/header') %>
+
+    <section class="auth-wrapper bg-mesh-1">
+        <div class="container d-flex justify-content-center">
+            <div class="auth-card row g-0">
+                <!-- Form Section -->
+                <div class="col-lg-6 auth-form-section bg-white order-2 order-lg-1">
+                    <div class="text-start mb-4">
+                        <h2 class="fw-bold mb-1">Welcome Back</h2>
+                        <p class="text-muted">Please enter your details to sign in.</p>
+                    </div>
+
+                    <form action="/login" method="POST">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" name="email"
+                                placeholder="name@example.com" required>
+                            <label for="email">Email Address</label>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <input type="password" class="form-control" id="password" name="password"
+                                placeholder="Password" required>
+                            <label for="password">Password</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 shadow-sm mb-3">Sign In</button>
+
+                        <div class="position-relative text-center my-3">
+                            <hr class="text-muted opacity-25">
+                            <span
+                                class="position-absolute top-50 start-50 translate-middle px-3 bg-white text-muted small">OR</span>
+                        </div>
+
+                        <a href="/auth/google"
+                            class="btn btn-outline-dark w-100 shadow-sm d-flex align-items-center justify-content-center gap-2 py-2">
+                            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="20"
+                                height="20">
+                            Continue with Google
+                        </a>
+                    </form>
+
+                    <p class="auth-footer mt-4">
+                        Don't have an account yet? <a href="/signup">Sign up for free</a>
+                    </p>
+                </div>
+
+                <!-- Illustration Section -->
+                <div
+                    class="col-lg-6 d-none d-lg-block auth-cover order-1 order-lg-2 p-0 position-relative overflow-hidden">
+                    <div
+                        style="position: absolute; inset: 0; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); opacity: 0.9;">
+                    </div>
+                    <div
+                        style="position: absolute; inset: 0; background-image: url('https://img.freepik.com/free-vector/mobile-login-concept-illustration_114360-83.jpg'); background-size: cover; background-position: center; opacity: 0.4; mix-blend-mode: overlay;">
+                    </div>
+
+                    <div class="position-relative z-1 text-center text-white p-5">
+                        <h3 class="fw-bold mb-3">Access Top Healthcare</h3>
+                        <p class="opacity-75">Connect with specialists across the globe right from your device.</p>
+                        <img src="https://img.freepik.com/free-vector/access-control-system-abstract-concept_335657-3180.jpg"
+                            alt="Login Illustration" class="img-fluid rounded-4 shadow-lg mt-4"
+                            style="max-height: 300px; transform: rotate(-2deg);">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%- include('../partials/footer') %>

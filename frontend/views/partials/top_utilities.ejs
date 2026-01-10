@@ -1,0 +1,299 @@
+<% if (!locals.isHome) { %>
+    <div id="top-utilities-container" class="d-flex align-items-center gap-3 notranslate"
+        style="position: fixed; top: 20px; right: 30px; z-index: 1100;">
+
+        <!-- 1. Notification Bell -->
+        <div class="position-relative">
+            <button id="util-notif-btn"
+                class="btn btn-light rounded-circle shadow-sm border d-flex align-items-center justify-content-center"
+                style="width: 45px; height: 45px; transition: transform 0.2s;">
+                <i class="fas fa-bell text-secondary fa-lg"></i>
+                <span id="notif-badge"
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"
+                    style="font-size: 0.6rem; padding: 0.35em 0.5em;">0</span>
+            </button>
+            <!-- Dropdown -->
+            <div id="util-notif-dropdown" class="card shadow-lg border-0 position-absolute end-0 mt-3 p-3"
+                style="width: 320px; display: none; border-radius: 12px; z-index: 1101;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0">Notifications</h6>
+                    <a href="/messages" class="small text-primary text-decoration-none">View All</a>
+                </div>
+                <div id="notif-list" class="list-group list-group-flush small"
+                    style="max-height: 300px; overflow-y: auto;">
+                    <!-- Content injected via JS -->
+                    <div class="text-center text-muted py-3">No new notifications</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Language Switcher (Pill Style) -->
+        <div class="position-relative">
+            <button id="util-lang-btn"
+                class="btn btn-light rounded-pill shadow-sm border d-flex align-items-center gap-2 px-3 py-2"
+                style="height: 45px; transition: transform 0.2s;">
+                <img src="https://flagcdn.com/w40/us.png" id="util-lang-flag" style="width: 20px; border-radius: 2px;">
+                <span id="util-lang-text" class="fw-bold small text-dark mb-0">English</span>
+            </button>
+
+            <div id="util-lang-dropdown" class="card shadow-lg border-0 position-absolute end-0 mt-3"
+                style="width: 160px; display: none; border-radius: 12px; overflow: hidden; z-index: 1101;">
+                <ul class="list-group list-group-flush small">
+                    <li class="list-group-item list-group-item-action cursor-pointer d-flex align-items-center gap-2 lang-option"
+                        data-lang="en">
+                        <img src="https://flagcdn.com/w40/us.png" width="16"> English
+                    </li>
+                    <li class="list-group-item list-group-item-action cursor-pointer d-flex align-items-center gap-2 lang-option"
+                        data-lang="es">
+                        <img src="https://flagcdn.com/w40/es.png" width="16"> Spanish
+                    </li>
+                    <li class="list-group-item list-group-item-action cursor-pointer d-flex align-items-center gap-2 lang-option"
+                        data-lang="fr">
+                        <img src="https://flagcdn.com/w40/fr.png" width="16"> French
+                    </li>
+                    <li class="list-group-item list-group-item-action cursor-pointer d-flex align-items-center gap-2 lang-option"
+                        data-lang="de">
+                        <img src="https://flagcdn.com/w40/de.png" width="16"> German
+                    </li>
+                    <li class="list-group-item list-group-item-action cursor-pointer d-flex align-items-center gap-2 lang-option"
+                        data-lang="hi">
+                        <img src="https://flagcdn.com/w40/in.png" width="16"> Hindi
+                    </li>
+                    <li class="list-group-item list-group-item-action cursor-pointer d-flex align-items-center gap-2 lang-option"
+                        data-lang="zh-CN">
+                        <img src="https://flagcdn.com/w40/cn.png" width="16"> Chinese
+                    </li>
+                    <li class="list-group-item list-group-item-action cursor-pointer d-flex align-items-center gap-2 lang-option"
+                        data-lang="ar">
+                        <img src="https://flagcdn.com/w40/sa.png" width="16"> Arabic
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 3. Theme Toggle (CSS Icon) -->
+        <button id="util-theme-btn"
+            class="btn btn-light rounded-circle shadow-sm border d-flex align-items-center justify-content-center"
+            style="width: 45px; height: 45px; transition: transform 0.2s;">
+            <i id="theme-icon" class="fas fa-sun text-warning fa-lg" style="transition: transform 0.5s ease;"></i>
+        </button>
+
+        <!-- 4. Profile Button -->
+        <div class="position-relative">
+            <button id="util-profile-btn"
+                class="btn rounded-pill shadow-sm border p-1 pe-3 d-flex align-items-center gap-2 glass-header-btn"
+                style="height: 45px; transition: transform 0.2s;">
+                <img src="<%= (locals.user && locals.user.profilePic) ? locals.user.profilePic : '/images/default-profile.png' %>"
+                    class="rounded-circle object-fit-cover" style="width: 35px; height: 35px; border: 2px solid #fff;">
+                <span class="fw-bold small text-dark">
+                    <%= (locals.user && locals.user.fullName && locals.user.fullName.split(' ')[0]) || ' User' %>
+                </span>
+                <i class="fas fa-chevron-down text-muted" style="font-size: 0.7rem;"></i>
+            </button>
+
+            <!-- Profile Card Dropdown -->
+            <div id="util-profile-card" class="card shadow-lg border-0 position-absolute end-0 mt-3 text-center p-4"
+                style="width: 260px; display: none; border-radius: 15px; z-index: 1101;">
+                <div class="mb-3">
+                    <img src="<%= (locals.user && locals.user.profilePic) ? locals.user.profilePic : '/images/default-profile.png' %>"
+                        class="rounded-circle shadow-sm object-fit-cover" style="width: 80px; height: 80px;">
+                </div>
+                <h5 class="fw-bold mb-1">
+                    <%= (locals.user && locals.user.fullName) || 'Guest User' %>
+                </h5>
+                <p class="text-muted small mb-3">
+                    <%= (locals.user && locals.user.email) || 'email@example.com' %>
+                </p>
+                <div class="d-grid gap-2">
+                    <a href="/profile" class="btn btn-primary rounded-pill btn-sm">View Full Profile</a>
+                    <a href="/logout" class="btn btn-outline-danger rounded-pill btn-sm">Logout</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden Google Translate Element -->
+        <div id="google_translate_element" style="display: none;"></div>
+    </div>
+    <% } %>
+
+        <!-- DotLottie Script -->
+        <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
+
+        <style>
+            /* Utility Hover Effects */
+            #util-notif-btn:hover,
+            #util-theme-btn:hover,
+            #util-profile-btn:hover {
+                transform: translateY(-2px);
+            }
+
+            #util-lang-btn:hover {
+                transform: translateY(-2px);
+            }
+
+            .cursor-pointer {
+                cursor: pointer;
+            }
+
+            /* Hide Google Topbar */
+            .skiptranslate iframe {
+                display: none !important;
+            }
+
+            body {
+                top: 0 !important;
+            }
+        </style>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // === 1. Notifications ===
+                const notifBtn = document.getElementById('util-notif-btn');
+                const notifDrop = document.getElementById('util-notif-dropdown');
+
+                if (notifBtn && notifDrop) {
+                    // Fetch Notifications on Load
+                    fetch('/messages/unread-count')
+                        .then(res => res.json())
+                        .then(data => {
+                            const badge = document.getElementById('notif-badge');
+                            const list = document.getElementById('notif-list');
+
+                            if (data.count > 0) {
+                                badge.textContent = data.count > 9 ? '9+' : data.count;
+                                badge.classList.remove('d-none');
+
+                                // Render Messages
+                                if (data.messages && data.messages.length > 0) {
+                                    list.innerHTML = data.messages.map(msg => `
+                                        <a href="/messages?userId=${msg.senderId._id || msg.senderId}" class="list-group-item list-group-item-action border-0 px-0">
+                                            <div class="d-flex align-items-start gap-2">
+                                                <img src="${msg.senderId.profilePic || '/images/default-profile.png'}" 
+                                                     class="rounded-circle object-fit-cover flex-shrink-0" width="35" height="35">
+                                                <div class="flex-grow-1 overflow-hidden">
+                                                    <div class="d-flex justify-content-between">
+                                                        <strong class="text-truncate" style="max-width: 120px;">${msg.senderId.fullName || 'User'}</strong>
+                                                        <small class="text-muted ms-1" style="font-size: 0.7rem;">${new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
+                                                    </div>
+                                                    <div class="text-muted text-truncate" style="font-size: 0.75rem;">${msg.content}</div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    `).join('');
+                                }
+                            } else {
+                                badge.classList.add('d-none');
+                                list.innerHTML = '<div class="text-center text-muted py-3 small">No new notifications</div>';
+                            }
+                        })
+                        .catch(err => console.error('Error fetching notifications:', err));
+
+                    notifBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        closeAllDropdowns();
+                        notifDrop.style.display = notifDrop.style.display === 'block' ? 'none' : 'block';
+                    });
+                }
+
+                // === 2. Language Switcher ===
+                const langBtn = document.getElementById('util-lang-btn');
+                const langDrop = document.getElementById('util-lang-dropdown');
+                const langFlag = document.getElementById('util-lang-flag');
+                const langText = document.getElementById('util-lang-text');
+
+                const flags = {
+                    'en': { flag: 'us', name: 'English' },
+                    'es': { flag: 'es', name: 'Spanish' },
+                    'fr': { flag: 'fr', name: 'French' },
+                    'de': { flag: 'de', name: 'German' },
+                    'hi': { flag: 'in', name: 'Hindi' },
+                    'zh-CN': { flag: 'cn', name: 'Chinese' },
+                    'ar': { flag: 'sa', name: 'Arabic' }
+                };
+
+                function getCookie(name) {
+                    const v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+                    return v ? v[2] : null;
+                }
+
+                if (langBtn && langFlag && langText) {
+                    const currentCookie = getCookie('googtrans');
+                    let currentLang = 'en';
+                    if (currentCookie) {
+                        const parts = currentCookie.split('/');
+                        if (parts.length >= 3) currentLang = parts[2];
+                    }
+                    const langData = flags[currentLang] || flags['en'];
+                    langFlag.src = `https://flagcdn.com/w40/${langData.flag}.png`;
+                    langText.textContent = langData.name;
+
+                    langBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        // Check if langDrop exists (might be separate check)
+                        if (langDrop) {
+                            const isOpen = langDrop.style.display === 'block';
+                            closeAllDropdowns();
+                            if (!isOpen) langDrop.style.display = 'block';
+                        }
+                    });
+                }
+
+                document.querySelectorAll('.lang-option').forEach(item => {
+                    item.addEventListener('click', function () {
+                        const lang = this.getAttribute('data-lang');
+                        document.cookie = `googtrans=/en/${lang}; path=/; domain=${window.location.hostname}`;
+                        document.cookie = `googtrans=/en/${lang}; path=/;`;
+                        window.location.reload();
+                    });
+                });
+
+                // === 3. Theme Toggle (CSS Icon) - Handled globally in footer.ejs
+                const themeIcon = document.getElementById('theme-icon');
+                const isDark = localStorage.getItem('theme') === 'dark';
+
+                // Initial sync for icon state if needed (though footer handles it, this ensures consistency)
+                if (themeIcon) {
+                    if (isDark) {
+                        themeIcon.classList.remove('fa-sun', 'text-warning');
+                        themeIcon.classList.add('fa-moon', 'text-white');
+                    } else {
+                        themeIcon.classList.remove('fa-moon', 'text-white');
+                        themeIcon.classList.add('fa-sun', 'text-warning');
+                    }
+                }
+
+                // === 4. Profile Button ===
+                const proBtn = document.getElementById('util-profile-btn');
+                const proCard = document.getElementById('util-profile-card');
+
+                if (proBtn) {
+                    proBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const isOpen = proCard.style.display === 'block';
+                        closeAllDropdowns();
+                        if (!isOpen) proCard.style.display = 'block';
+                    });
+                }
+
+                // Global Close
+                document.addEventListener('click', () => {
+                    closeAllDropdowns();
+                });
+
+                function closeAllDropdowns() {
+                    if (notifDrop) notifDrop.style.display = 'none';
+                    if (langDrop) langDrop.style.display = 'none';
+                    if (proCard) proCard.style.display = 'none';
+                }
+            });
+
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'en',
+                    includedLanguages: 'en,es,fr,de,hi,zh-CN,ar',
+                    autoDisplay: false
+                }, 'google_translate_element');
+            }
+        </script>
+        <script type="text/javascript"
+            src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>

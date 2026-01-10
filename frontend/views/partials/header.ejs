@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Critical Theme Script (Must be first to prevent FOUC) -->
+<script>
+    (function () {
+        const theme = localStorage.getItem('theme');
+        // Immediate Dark Mode Application
+        if (theme === 'dark') {
+            document.documentElement.setAttribute('data-bs-theme', 'dark');
+            // Force background immediately to prevent white flash before CSS loads
+            document.documentElement.style.backgroundColor = '#0f172a';
+        }
+    })();
+</script>
+<style>
+    /* Critical CSS for No-Transition on Load */
+    .no-transition,
+    .no-transition * {
+        transition: none !important;
+    }
+</style>
+<script>
+    // Apply no-transition class immediately
+    document.documentElement.classList.add('no-transition');
+
+    window.addEventListener('load', function () {
+        // Remove inline background override to let CSS variables take over
+        document.documentElement.style.backgroundColor = '';
+
+        // Re-enable transitions after a frame
+        requestAnimationFrame(() => {
+            document.documentElement.classList.remove('no-transition');
+        });
+    });
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="/favicon.png">
+<title>
+    <% let pageTitle='Advanced Healthcare' ; if (typeof title !=='undefined' && title) { pageTitle=title; } if
+        (pageTitle.indexOf('MediConnect')===-1) { pageTitle='MediConnect - ' + pageTitle; } %>
+        <%= pageTitle %>
+</title>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Custom CSS -->
+<link rel="stylesheet" href="/css/style.css">
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heartbeat text-primary"></i>
+                MediConnect
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/#ai-features">AI Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/#how-it-works">How It Works</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/#specialists">Specialists</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-3">
+                    <% if (locals.isHome) { %>
+                        <!-- Theme Toggle -->
+                        <button id="util-theme-btn"
+                            class="btn btn-light rounded-circle shadow-sm border d-flex align-items-center justify-content-center me-2"
+                            style="width: 40px; height: 40px; transition: transform 0.2s;">
+                            <i id="theme-icon" class="fas fa-sun text-warning"
+                                style="transition: transform 0.5s ease;"></i>
+                        </button>
+
+                        <!-- Language Switcher -->
+                        <div class="position-relative me-3">
+                            <button id="util-lang-btn"
+                                class="btn btn-light rounded-pill shadow-sm border d-flex align-items-center gap-2 px-3 py-1"
+                                style="height: 40px; transition: transform 0.2s;">
+                                <img src="https://flagcdn.com/w40/us.png" id="util-lang-flag"
+                                    style="width: 20px; border-radius: 2px;">
+                                <span id="util-lang-text" class="fw-bold small text-dark mb-0">English</span>
+                            </button>
+                            <!-- Dropdown (Copied structure for JS compatibility) -->
+                            <div id="util-lang-dropdown" class="card shadow-lg border-0 position-absolute end-0 mt-2"
+                                style="width: 160px; display: none; border-radius: 12px; overflow: hidden; z-index: 1101;">
+                                <ul class="list-group list-group-flush small">
+                                    <li class="list-group-item list-group-item-action cursor-pointer d-flex align-items-center gap-2 lang-option"
+                                        data-lang="en"><img src="https://flagcdn.com/w40/us.png" width="16"> English
+                                    </li>
+                                    <li class="list-group-item list-group-item-action cursor-pointer d-flex align-items-center gap-2 lang-option"
+                                        data-lang="es"><img src="https://flagcdn.com/w40/es.png" width="16"> Spanish
+                                    </li>
+                                    <li class="list-group-item list-group-item-action cursor-pointer d-flex align-items-center gap-2 lang-option"
+                                        data-lang="fr"><img src="https://flagcdn.com/w40/fr.png" width="16"> French</li>
+                                    <li class="list-group-item list-group-item-action cursor-pointer d-flex align-items-center gap-2 lang-option"
+                                        data-lang="de"><img src="https://flagcdn.com/w40/de.png" width="16"> German</li>
+                                    <li class="list-group-item list-group-item-action cursor-pointer d-flex align-items-center gap-2 lang-option"
+                                        data-lang="hi"><img src="https://flagcdn.com/w40/in.png" width="16"> Hindi</li>
+                                    <li class="list-group-item list-group-item-action cursor-pointer d-flex align-items-center gap-2 lang-option"
+                                        data-lang="zh-CN"><img src="https://flagcdn.com/w40/cn.png" width="16"> Chinese
+                                    </li>
+                                    <li class="list-group-item list-group-item-action cursor-pointer d-flex align-items-center gap-2 lang-option"
+                                        data-lang="ar"><img src="https://flagcdn.com/w40/sa.png" width="16"> Arabic</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <% } %>
+
+                            <% if (typeof user !='undefined' && user) { %>
+                                <a href="/dashboard" class="btn btn-nav-primary">
+                                    Dashboard <i class="fas fa-arrow-right ms-2 small"></i>
+                                </a>
+                                <% } else { %>
+                                    <a href="/login" class="btn-nav-outline">Log In</a>
+                                    <a href="/signup" class="btn btn-nav-primary">Get Started</a>
+                                    <% } %>
+                </div>
+            </div>
+        </div>
+    </nav>

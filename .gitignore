@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Environment Variables
+.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# Documentation & Planning
+outline.txt
+project-flow.txt
+implementation_plan.md
+task.md
+walkthrough.md
+*.bak
+*.tmp
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

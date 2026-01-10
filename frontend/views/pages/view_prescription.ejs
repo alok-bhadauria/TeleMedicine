@@ -1,0 +1,64 @@
+<%- include('../partials/header') %>
+
+    <div class="container mt-4">
+        <h2>Prescription Details</h2>
+        <div class="card mt-3">
+            <div class="card-header d-flex justify-content-between">
+                <span>Dr. <%= prescription.doctorId.fullName %></span>
+                <small>
+                    <%= prescription.issuedAt.toDateString() %>
+                </small>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Patient: <%= prescription.patientId.fullName %>
+                </h5>
+
+                <% if(prescription.medicines && prescription.medicines.length> 0) { %>
+                    <hr>
+                    <h6>Medicines</h6>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Dosage</th>
+                                    <th>Duration</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% prescription.medicines.forEach(med=> { %>
+                                    <tr>
+                                        <td>
+                                            <%= med.name %>
+                                        </td>
+                                        <td>
+                                            <%= med.dosage %>
+                                        </td>
+                                        <td>
+                                            <%= med.duration %>
+                                        </td>
+                                        <td>
+                                            <%= med.notes %>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <% } %>
+
+                        <div class="mt-3">
+                            <h6>Special Advice</h6>
+                            <p class="fst-italic">
+                                <%= prescription.advice %>
+                            </p>
+                        </div>
+            </div>
+            <div class="card-footer text-muted text-center">
+                MediConnect Platform Generated Prescription
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>

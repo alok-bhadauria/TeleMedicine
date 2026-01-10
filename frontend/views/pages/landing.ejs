@@ -1,0 +1,423 @@
+<%- include('../partials/header') %>
+
+    <!-- Hero Section -->
+    <section class="hero-section bg-mesh-1 d-flex align-items-center">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0 fade-in-up">
+                    <div class="d-inline-flex align-items-center bg-white border rounded-pill px-3 py-1 mb-4 shadow-sm">
+                        <span class="badge bg-success rounded-pill me-2">New</span>
+                        <span class="small text-muted fw-bold">AI Health Assistant Enabled</span>
+                    </div>
+                    <h1 class="hero-heading">
+                        Virtual Healthcare <br>
+                        <span class="text-primary">For You.</span>
+                    </h1>
+                    <p class="hero-sub w-75">
+                        MediConnect provides progressive, and affordable healthcare, accessible on mobile and online
+                        for everyone. To us, it’s not just work. We take pride in the solutions we deliver.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <% if (typeof user !='undefined' && user) { %>
+                            <a href="/dashboard" class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow-lg">Go to
+                                Dashboard</a>
+                            <% } else { %>
+                                <a href="/signup"
+                                    class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow-lg">Consult Now</a>
+                                <a href="#how-it-works"
+                                    class="btn btn-outline-secondary btn-lg rounded-pill px-5 py-3 border-2">Learn
+                                    More</a>
+                                <% } %>
+                    </div>
+                    <div class="mt-5 pt-4 border-top">
+                        <div class="d-flex align-items-center gap-5">
+                            <div>
+                                <h3 class="fw-bold mb-0">5k+</h3>
+                                <p class="text-muted small mb-0">Recovered Patients</p>
+                            </div>
+                            <div>
+                                <h3 class="fw-bold mb-0">98%</h3>
+                                <p class="text-muted small mb-0">Satisfaction Rate</p>
+                            </div>
+                            <div>
+                                <h3 class="fw-bold mb-0">80+</h3>
+                                <p class="text-muted small mb-0">Expert Doctors</p>
+                            </div>
+                            is here.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="position-relative d-inline-block">
+                        <!-- Background Blob -->
+                        <div
+                            style="position: absolute; top: 10%; right: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(37,99,235,0.1) 0%, transparent 70%); z-index: -1;">
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=1080&auto=format&fit=crop"
+                            alt="TeleHealth Doctor" class="img-fluid rounded-4 shadow-lg mb-4"
+                            style="max-height: 550px; transform: rotate(2deg);">
+
+                        <!-- Floating Card -->
+                        <div class="position-absolute bg-white p-3 rounded-4 shadow-lg d-flex align-items-center gap-3"
+                            style="bottom: 50px; left: -40px; border: 1px solid #f1f5f9;">
+                            <div class="bg-success bg-opacity-10 p-2 rounded-circle text-success">
+                                <i class="fas fa-video fa-lg"></i>
+                            </div>
+                            <div class="text-start">
+                                <p class="mb-0 fw-bold small">Online Consultation</p>
+                                <span class="text-muted mx-1" style="font-size: 0.7rem;">Active Now</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <!-- AI Health Assistant Showcase (New) -->
+    <section id="ai-features" class="py-5 bg-white border-top">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0 fade-in-up">
+                    <img src="https://img.freepik.com/free-vector/chatbot-artificial-intelligence-abstract-concept-illustration_335657-3723.jpg"
+                        alt="AI Health Assistant" class="img-fluid rounded-4 shadow-lg">
+                </div>
+                <div class="col-lg-6 fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="ps-lg-5">
+                        <div
+                            class="d-inline-flex align-items-center bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-1 mb-3">
+                            <i class="fas fa-robot me-2"></i>
+                            <span class="small fw-bold">Advanced AI Technology</span>
+                        </div>
+                        <h2 class="section-title mb-4">Meet Your Personal Health Companions</h2>
+                        <p class="text-muted mb-4 lead">
+                            Experience the future of healthcare with our integrated AI assistants.
+                            Whether you need quick symptom checks or mental health support, we're here 24/7.
+                        </p>
+
+                        <div class="d-flex flex-column gap-4">
+                            <!-- MediBot Feature -->
+                            <div class="d-flex align-items-start">
+                                <div class="bg-primary text-white rounded-circle p-3 me-3 shrink-0">
+                                    <i class="fas fa-user-nurse fa-lg"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">MediBot AI &nbsp; (ChatBot AI)</h5>
+                                    <p class="text-muted small mb-0">Your intelligent primary care assistant. Ask about
+                                        symptoms, medications, or general health tips instantly.</p>
+                                </div>
+                            </div>
+
+                            <!-- Niramya Feature -->
+                            <div class="d-flex align-items-start">
+                                <div class="bg-success text-white rounded-circle p-3 me-3 shrink-0">
+                                    <i class="fas fa-brain fa-lg"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">Niramya AI &nbsp; (Calling AI)</h5>
+                                    <p class="text-muted small mb-0">Advanced mental health and wellness support.
+                                        Powered by OmniDimension for empathetic and understanding conversations.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-5">
+                            <% if (typeof user !='undefined' && user) { %>
+                                <a href="/dashboard" class="btn btn-primary rounded-pill px-4 py-2 me-3 shadow-sm">
+                                    Try AI Assistants <i class="fas fa-arrow-right ms-2"></i>
+                                </a>
+                                <% } else { %>
+                                    <a href="/login" class="btn btn-primary rounded-pill px-4 py-2 me-3 shadow-sm">
+                                        Login to Chat <i class="fas fa-arrow-right ms-2"></i>
+                                    </a>
+                                    <a href="/signup" class="btn btn-outline-primary rounded-pill px-4 py-2">
+                                        Get Started
+                                    </a>
+                                    <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Strip -->
+    <div class="py-4 border-bottom bg-white">
+        <div class="container text-center">
+            <p class="description small text-muted text-uppercase fw-bold ls-2 mb-3">Trusted by health networks</p>
+            <div class="d-flex justify-content-center gap-5 flex-wrap opacity-50 grayscale">
+                <h4 class="text-muted mb-0"><i class="fas fa-hospital me-2"></i>MediCare</h4>
+                <h4 class="text-muted mb-0"><i class="fas fa-heartbeat me-2"></i>HealthPlus</h4>
+                <h4 class="text-muted mb-0"><i class="fas fa-user-md me-2"></i>DocConnect</h4>
+                <h4 class="text-muted mb-0"><i class="fas fa-clinic-medical me-2"></i>PharmaLive</h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works (New) -->
+    <section id="how-it-works" class="py-5 bg-mesh-2 position-relative">
+        <div class="container py-5">
+            <div class="section-header fade-in-up">
+                <span class="section-label">Our Process</span>
+                <h2 class="section-title">How It Works</h2>
+                <p class="text-muted mx-auto w-50">Get the best medical care in just a few simple steps. No waiting
+                    lines, no hassle.</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4 fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="step-card hover-card shadow-sm">
+                        <span class="step-number">01</span>
+                        <div class="mb-4 text-primary">
+                            <i class="fas fa-user-plus fa-3x"></i>
+                        </div>
+                        <h4>Create Account</h4>
+                        <p class="text-muted">Sign up in seconds. Fill in your basic medical history to help us
+                            understand you better.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="step-card hover-card shadow-sm">
+                        <span class="step-number">02</span>
+                        <div class="mb-4 text-primary">
+                            <i class="fas fa-search-location fa-3x"></i>
+                        </div>
+                        <h4>Choose a Doctor</h4>
+                        <p class="text-muted">Browse through our list of verified specialists. Filter by rating,
+                            experience, or specialty.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 fade-in-up" style="animation-delay: 0.3s;">
+                    <div class="step-card hover-card shadow-sm">
+                        <span class="step-number">03</span>
+                        <div class="mb-4 text-primary">
+                            <i class="fas fa-video fa-3x"></i>
+                        </div>
+                        <h4>Get Consulted</h4>
+                        <p class="text-muted">Connect via high-quality video call. Get your diagnosis and prescription
+                            instantly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid (Refined) -->
+    <section class="py-5 bg-white">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-5 fade-in-up">
+                    <span class="section-label">Our Features</span>
+                    <h2 class="section-title mb-4">Why Choose MediConnect?</h2>
+                    <p class="text-muted mb-4">We are dedicated to providing the best digital healthcare experience. Our
+                        platform is built with patient convenience and data security in mind.</p>
+
+                    <ul class="list-unstyled">
+                        <li class="d-flex align-items-start mb-3">
+                            <i class="fas fa-check-circle text-primary mt-1 me-3"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1">AI-Powered Assistance</h6>
+                                <p class="small text-muted">Smart symptom checker before you meet the doctor.</p>
+                            </div>
+                        </li>
+                        <li class="d-flex align-items-start mb-3">
+                            <i class="fas fa-check-circle text-primary mt-1 me-3"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1">Secure Health Records</h6>
+                                <p class="small text-muted">Encryption ensures your data stays private always.</p>
+                            </div>
+                        </li>
+                        <li class="d-flex align-items-start mb-3">
+                            <i class="fas fa-check-circle text-primary mt-1 me-3"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1">24/7 Availability</h6>
+                                <p class="small text-muted">Doctors and support available round the clock.</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <a href="/signup" class="btn btn-primary rounded-pill px-4 mt-2">Learn More</a>
+                </div>
+                <div class="col-lg-6 offset-lg-1 fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="p-4 bg-light rounded-4 mb-3 text-center h-100 border">
+                                <i class="fas fa-user-md fa-2x text-primary mb-3"></i>
+                                <h5 class="fw-bold">Verified Doctors</h5>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-4 bg-light rounded-4 mb-3 text-center h-100 border">
+                                <i class="fas fa-prescription-bottle-alt fa-2x text-warning mb-3"></i>
+                                <h5 class="fw-bold">E-Prescription</h5>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-4 bg-light rounded-4 mb-3 text-center h-100 border">
+                                <i class="fas fa-comments fa-2x text-success mb-3"></i>
+                                <h5 class="fw-bold">Free Chat</h5>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-4 bg-light rounded-4 mb-3 text-center h-100 border">
+                                <i class="fas fa-ambulance fa-2x text-danger mb-3"></i>
+                                <h5 class="fw-bold">Emergency</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Specialists (New) -->
+    <section id="specialists" class="py-5 bg-light">
+        <div class="container py-5">
+            <div class="section-header">
+                <span class="section-label">Our Team</span>
+                <h2 class="section-title">Meet Our Specialists</h2>
+                <p class="text-muted w-50 mx-auto">Top-rated doctors from various fields ready to assist you.</p>
+            </div>
+
+            <!-- Carousel / Grid Placeholder -->
+            <div class="row g-4">
+                <!-- Doctor 1 -->
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100 hover-card">
+                        <img src="https://img.freepik.com/free-photo/doctor-offering-medical-teleconsultation_23-2149329007.jpg"
+                            class="card-img-top" style="height: 250px; object-fit: cover; object-position: top;"
+                            alt="Dr. John">
+                        <div class="card-body text-center">
+                            <h5 class="fw-bold">Dr. Sarah West</h5>
+                            <p class="text-primary small fw-bold">CARDIOLOGIST</p>
+                            <p class="text-muted small">10+ Years Experience</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Doctor 2 -->
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100 hover-card">
+                        <img src="https://img.freepik.com/free-photo/portrait-smiling-handsome-male-doctor-man_171337-5058.jpg"
+                            class="card-img-top" style="height: 250px; object-fit: cover; object-position: top;"
+                            alt="Dr. Mark">
+                        <div class="card-body text-center">
+                            <h5 class="fw-bold">Dr. Mark Lee</h5>
+                            <p class="text-primary small fw-bold">DERMATOLOGIST</p>
+                            <p class="text-muted small">8 Years Experience</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Doctor 3 -->
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100 hover-card">
+                        <img src="https://img.freepik.com/free-photo/medium-shot-smiley-doctor-with-coat_23-2148814212.jpg"
+                            class="card-img-top" style="height: 250px; object-fit: cover; object-position: top;"
+                            alt="Dr. Emily">
+                        <div class="card-body text-center">
+                            <h5 class="fw-bold">Dr. Emily Chen</h5>
+                            <p class="text-primary small fw-bold">PEDIATRICIAN</p>
+                            <p class="text-muted small">12 Years Experience</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Doctor 4 -->
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100 hover-card">
+                        <img src="https://img.freepik.com/free-photo/young-doctor-getting-ready-work_23-2149393691.jpg"
+                            class="card-img-top" style="height: 250px; object-fit: cover; object-position: top;"
+                            alt="Dr. Alex">
+                        <div class="card-body text-center">
+                            <h5 class="fw-bold">Dr. Alex Root</h5>
+                            <p class="text-primary small fw-bold">PSYCHIATRIST</p>
+                            <p class="text-muted small">15 Years Experience</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-5">
+                <a href="/doctors" class="btn btn-outline-primary rounded-pill px-4">View All Specialists</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ (New) -->
+    <section id="faq" class="py-5 bg-white">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="section-header mb-5 text-center">
+                        <span class="section-label">FAQ</span>
+                        <h2 class="section-title">Common Questions</h2>
+                    </div>
+
+                    <div class="accordion" id="accordionFAQ">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseOne">
+                                    How do I consult a doctor?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show"
+                                data-bs-parent="#accordionFAQ">
+                                <div class="accordion-body">
+                                    Simply sign up, choose a specialist from our list, and click on "Book Appointment".
+                                    You can choose a suitable time slot and pay online.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseTwo">
+                                    Is my data safe?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+                                <div class="accordion-body">
+                                    Absolutely. We use end-to-end encryption for all video calls and messages. Your
+                                    medical records are stored on secure cloud servers complying with health data
+                                    regulations.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseThree">
+                                    Can I get a prescription?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+                                <div class="accordion-body">
+                                    Yes, after your consultation, the doctor will generate a digital prescription which
+                                    you can download from your dashboard and use at any pharmacy.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Call to Action -->
+    <section class="py-5 bg-mesh-1">
+        <div class="container py-5">
+            <div class="bg-primary rounded-4 p-5 text-center text-white position-relative overflow-hidden"
+                style="background: var(--gradient-primary);">
+                <div
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('https://www.transparenttextures.com/patterns/cubes.png'); opacity: 0.1;">
+                </div>
+                <div class="position-relative z-1">
+                    <h2 class="fw-bold text-white mb-3 display-5">Ready to Get Started?</h2>
+                    <p class="lead mb-4 opacity-75">Join over 10,000+ users trusting MediConnect for their health.</p>
+                    <a href="/signup"
+                        class="btn btn-light text-primary fw-bold rounded-pill px-5 py-3 shadow-lg hover-scale">Create
+                        Free Account</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%- include('../partials/footer') %>

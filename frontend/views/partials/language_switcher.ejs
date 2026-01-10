@@ -1,0 +1,149 @@
+<div id="language-switcher-container" class="notranslate">
+    <!-- Trigger Button -->
+    <button id="lang-toggle-btn"
+        class="btn btn-light rounded-pill shadow-sm d-flex align-items-center gap-2 border px-3 py-2"
+        style="position: fixed; top: 20px; right: 20px; z-index: 1100; transition: all 0.3s; min-width: 120px;">
+        <img src="https://flagcdn.com/w40/us.png" id="current-lang-flag"
+            style="width: 20px; height: auto; border-radius: 2px;">
+        <span id="current-lang-text" class="fw-bold small text-dark">English</span>
+    </button>
+
+    <!-- Custom Dropdown -->
+    <div id="lang-dropdown" class="card shadow-lg border-0"
+        style="position: fixed; top: 75px; right: 20px; width: 160px; z-index: 1100; display: none; border-radius: 12px; overflow: hidden;">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-2 cursor-pointer lang-option"
+                data-lang="en">
+                <img src="https://flagcdn.com/w40/us.png" style="width: 20px;"> <span>English</span>
+            </li>
+            <li class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-2 cursor-pointer lang-option"
+                data-lang="es">
+                <img src="https://flagcdn.com/w40/es.png" style="width: 20px;"> <span>Spanish</span>
+            </li>
+            <li class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-2 cursor-pointer lang-option"
+                data-lang="fr">
+                <img src="https://flagcdn.com/w40/fr.png" style="width: 20px;"> <span>French</span>
+            </li>
+            <li class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-2 cursor-pointer lang-option"
+                data-lang="de">
+                <img src="https://flagcdn.com/w40/de.png" style="width: 20px;"> <span>German</span>
+            </li>
+            <li class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-2 cursor-pointer lang-option"
+                data-lang="hi">
+                <img src="https://flagcdn.com/w40/in.png" style="width: 20px;"> <span>Hindi</span>
+            </li>
+            <li class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-2 cursor-pointer lang-option"
+                data-lang="zh-CN">
+                <img src="https://flagcdn.com/w40/cn.png" style="width: 20px;"> <span>Chinese</span>
+            </li>
+            <li class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-2 cursor-pointer lang-option"
+                data-lang="ar">
+                <img src="https://flagcdn.com/w40/sa.png" style="width: 20px;"> <span>Arabic</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Hidden Google Translate Element -->
+    <div id="google_translate_element" style="display: none;"></div>
+</div>
+
+<style>
+    /* Hide Google Topbar */
+    .skiptranslate iframe {
+        display: none !important;
+    }
+
+    body {
+        top: 0 !important;
+    }
+
+    .lang-option {
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .lang-option:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,es,fr,de,hi,zh-CN,ar',
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Toggle Dropdown
+        const btn = document.getElementById('lang-toggle-btn');
+        const dropdown = document.getElementById('lang-dropdown');
+        const flagIcon = document.getElementById('current-lang-flag');
+        const langText = document.getElementById('current-lang-text');
+
+        // Flags & Names Map
+        const languages = {
+            'en': { flag: 'us', name: 'English' },
+            'es': { flag: 'es', name: 'Spanish' },
+            'fr': { flag: 'fr', name: 'French' },
+            'de': { flag: 'de', name: 'German' },
+            'hi': { flag: 'in', name: 'Hindi' },
+            'zh-CN': { flag: 'cn', name: 'Chinese' },
+            'ar': { flag: 'sa', name: 'Arabic' }
+        };
+
+        // Determine current language from cookie
+        function getCookie(name) {
+            const v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+            return v ? v[2] : null;
+        }
+
+        // Initial Flag & Text Set
+        const currentCookie = getCookie('googtrans');
+        let currentLang = 'en';
+        if (currentCookie) {
+            // Cookie format is usually /en/es
+            const parts = currentCookie.split('/');
+            if (parts.length >= 3) {
+                currentLang = parts[2];
+            }
+        }
+
+        // Safety check for unknown language codes
+        const langData = languages[currentLang] || languages['en'];
+        flagIcon.src = `https://flagcdn.com/w40/${langData.flag}.png`;
+        langText.textContent = langData.name;
+
+
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Close on click outside
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Language Selection
+        document.querySelectorAll('.lang-option').forEach(item => {
+            item.addEventListener('click', function () {
+                const lang = this.getAttribute('data-lang');
+
+                // Set Google Translate Cookie
+                // Format: /source_lang/target_lang
+                document.cookie = `googtrans=/en/${lang}; path=/; domain=${window.location.hostname}`;
+                document.cookie = `googtrans=/en/${lang}; path=/;`; // Fallback
+
+                // Reload to apply
+                window.location.reload();
+            });
+        });
+    });
+</script>
+<script type="text/javascript"
+    src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>

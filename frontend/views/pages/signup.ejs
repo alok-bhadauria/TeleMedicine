@@ -1,0 +1,94 @@
+<%- include('../partials/header') %>
+
+    <section class="auth-wrapper bg-mesh-1">
+        <div class="container d-flex justify-content-center">
+            <div class="auth-card row g-0">
+                <!-- Illustration Section (Left for Signup) -->
+                <div class="col-lg-6 d-none d-lg-block auth-cover p-0 position-relative overflow-hidden">
+                    <div
+                        style="position: absolute; inset: 0; background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);">
+                    </div>
+                    <div
+                        class="position-relative z-1 h-100 d-flex flex-column justify-content-center align-items-center text-center text-white p-5">
+                        <h2 class="fw-bold mb-3 display-6">Join Our Community</h2>
+                        <p class="mb-4 opacity-75 fs-5">Experience the future of healthcare today.</p>
+                        <img src="https://img.freepik.com/free-vector/doctors-concept-illustration_114360-1515.jpg"
+                            alt="Signup Illustration" class="img-fluid rounded-circle shadow-lg mb-4 bg-white p-2"
+                            style="max-width: 280px;">
+                        <ul class="list-unstyled text-start w-100 px-3 mt-3">
+                            <li class="mb-2"><i class="fas fa-check-circle me-2 text-warning"></i> Unlimited
+                                Consultations</li>
+                            <li class="mb-2"><i class="fas fa-check-circle me-2 text-warning"></i> Secure Health Records
+                            </li>
+                            <li class="mb-2"><i class="fas fa-check-circle me-2 text-warning"></i> 24/7 AI Support</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Form Section -->
+                <div class="col-lg-6 auth-form-section bg-white">
+                    <div class="text-start mb-4">
+                        <h2 class="fw-bold mb-1">Create Account</h2>
+                        <p class="text-muted">Start your health journey with us.</p>
+                    </div>
+
+                    <form action="/signup" method="POST">
+                        <div class="mb-4">
+                            <label class="form-label text-muted small fw-bold">I AM A</label>
+                            <div class="role-selector d-flex gap-2">
+                                <input type="radio" class="btn-check" name="role" id="role-patient" value="patient"
+                                    checked>
+                                <label class="btn btn-outline-primary flex-fill text-center" for="role-patient">
+                                    <i class="fas fa-user mb-1 d-block fs-5"></i> Patient
+                                </label>
+
+                                <input type="radio" class="btn-check" name="role" id="role-doctor" value="doctor">
+                                <label class="btn btn-outline-primary flex-fill text-center" for="role-doctor">
+                                    <i class="fas fa-user-md mb-1 d-block fs-5"></i> Doctor
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="fullName" name="fullName" placeholder="John Doe"
+                                required>
+                            <label for="fullName">Full Name</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" name="email"
+                                placeholder="name@example.com" required>
+                            <label for="email">Email Address</label>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input type="password" class="form-control" id="password" name="password"
+                                placeholder="Password" required>
+                            <label for="password">Create Password</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 shadow-sm mb-3">Create Account</button>
+
+                        <div class="position-relative text-center my-3">
+                            <hr class="text-muted opacity-25">
+                            <span
+                                class="position-absolute top-50 start-50 translate-middle px-3 bg-white text-muted small">OR</span>
+                        </div>
+
+                        <a href="/auth/google"
+                            class="btn btn-outline-dark w-100 shadow-sm d-flex align-items-center justify-content-center gap-2 py-2">
+                            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="20"
+                                height="20">
+                            Sign up with Google
+                        </a>
+                    </form>
+
+                    <p class="auth-footer mt-4">
+                        Already have an account? <a href="/login">Log in here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%- include('../partials/footer') %>

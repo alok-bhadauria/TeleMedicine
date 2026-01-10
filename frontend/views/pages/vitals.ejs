@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+
+<body>
+    <div class="d-flex" id="wrapper">
+        <%- include('../partials/sidebar') %>
+            <div id="page-content-wrapper" class="main-gradient-bg">
+                <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
+                        <h2 class="fs-2 m-0 text-dark fw-bold">Health Progress</h2>
+                    </div>
+                </nav>
+
+                <div class="container-fluid px-4">
+                    <p class="text-muted mb-4">Track how your body metrics evolve over time using logs and charts.</p>
+
+                    <% if(locals.success_msg && success_msg.length> 0) { %>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <%= success_msg %>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                        </div>
+                        <% } %>
+                            <% if(locals.error_msg && error_msg.length> 0) { %>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <%= error_msg %>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                            aria-label="Close"></button>
+                                </div>
+                                <% } %>
+
+                                    <!-- Charts Row -->
+                                    <div class="row g-4 mb-4">
+                                        <!-- Weight Chart -->
+                                        <div class="col-md-4">
+                                            <div class="dash-card p-4 h-100 shadow-sm bg-white rounded-3">
+                                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                                    <div>
+                                                        <h6 class="fw-bold mb-0">Weight Trend</h6>
+                                                        <small class="text-muted">Changes over time</small>
+                                                    </div>
+                                                    <div class="bg-light rounded-circle p-2 text-primary">
+                                                        <i class="fas fa-weight"></i>
+                                                    </div>
+                                                </div>
+                                                <div id="weightChart"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Heart Rate Chart -->
+                                        <div class="col-md-4">
+                                            <div class="dash-card p-4 h-100 shadow-sm bg-white rounded-3">
+                                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                                    <div>
+                                                        <h6 class="fw-bold mb-0">Heart Rate</h6>
+                                                        <small class="text-muted">BPM history</small>
+                                                    </div>
+                                                    <div class="bg-light rounded-circle p-2 text-danger">
+                                                        <i class="fas fa-heartbeat"></i>
+                                                    </div>
+                                                </div>
+                                                <div id="hrChart"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- BP Chart -->
+                                        <div class="col-md-4">
+                                            <div class="dash-card p-4 h-100 shadow-sm bg-white rounded-3">
+                                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                                    <div>
+                                                        <h6 class="fw-bold mb-0">Blood Pressure</h6>
+                                                        <small class="text-muted">Systolic & Diastolic</small>
+                                                    </div>
+                                                    <div class="bg-light rounded-circle p-2 text-info">
+                                                        <i class="fas fa-tint"></i>
+                                                    </div>
+                                                </div>
+                                                <div id="bpChart"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Bottom Section -->
+                                    <div class="row g-4">
+                                        <!-- Update History -->
+                                        <div class="col-md-8">
+                                            <div class="dash-card p-4 h-100 shadow-sm bg-white rounded-3">
+                                                <h5 class="fw-bold mb-1">Update History</h5>
+                                                <p class="text-muted small mb-4">Every time you update your vitals, a
+                                                    log entry is stored</p>
+
+                                                <div class="table-responsive">
+                                                    <table class="table align-middle table-hover">
+                                                        <thead class="text-muted small text-uppercase"
+                                                            style="font-size: 0.8rem;">
+                                                            <tr>
+                                                                <th class="border-0">Date</th>
+                                                                <th class="border-0">Heart Rate</th>
+                                                                <th class="border-0">BP (Sys/Dia)</th>
+                                                                <th class="border-0">Weight</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <% if(groupedVitals && groupedVitals.length> 0) { %>
+                                                                <% groupedVitals.forEach(function(entry) { %>
+                                                                    <tr>
+                                                                        <td class="fw-bold text-dark">
+                                                                            <%= new
+                                                                                Date(entry.date).toLocaleDateString() %>
+                                                                                <span class="text-muted small">
+                                                                                    <%= new
+                                                                                        Date(entry.date).toLocaleTimeString([],
+                                                                                        {hour: '2-digit' ,
+                                                                                        minute:'2-digit'}) %>
+                                                                                </span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <% if(entry.heart_rate !=='-' ) { %>
+                                                                                <span
+                                                                                    class="badge bg-danger-subtle text-danger"><i
+                                                                                        class="fas fa-heartbeat me-1"></i>
+                                                                                    <%= entry.heart_rate %>
+                                                                                </span>
+                                                                                <% } else { %>
+                                                                                    <span class="text-muted">-</span>
+                                                                                    <% } %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <% if(entry.bp !=='-' ) { %>
+                                                                                <span class="fw-medium">
+                                                                                    <%= entry.bp %>
+                                                                                </span>
+                                                                                <% } else { %>
+                                                                                    <span class="text-muted">-</span>
+                                                                                    <% } %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <% if(entry.weight !=='-' ) { %>
+                                                                                <span class="fw-medium">
+                                                                                    <%= entry.weight %> <small
+                                                                                            class="text-muted">kg</small>
+                                                                                </span>
+                                                                                <% } else { %>
+                                                                                    <span class="text-muted">-</span>
+                                                                                    <% } %>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <% }) %>
+                                                                        <% } else { %>
+                                                                            <tr>
+                                                                                <td colspan="4"
+                                                                                    class="text-center text-muted py-5">
+                                                                                    No records found. Start logging your
+                                                                                    vitals!
+                                                                                </td>
+                                                                            </tr>
+                                                                            <% } %>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Log New Vitals Form -->
+                                        <div class="col-md-4">
+                                            <div class="dash-card p-4 h-100 shadow-sm bg-white rounded-3">
+                                                <h5 class="fw-bold mb-4">Log New Vitals</h5>
+                                                <form action="/vitals/add" method="POST">
+                                                    <div class="mb-3">
+                                                        <label class="form-label small text-muted fw-bold">Heart Rate
+                                                            (bpm)</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text bg-light border-end-0"><i
+                                                                    class="fas fa-heartbeat text-danger"></i></span>
+                                                            <input type="number"
+                                                                class="form-control border-start-0 ps-0 bg-light"
+                                                                name="heart_rate" placeholder="e.g. 72">
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label small text-muted fw-bold">Blood
+                                                            Pressure</label>
+                                                        <div class="row g-2">
+                                                            <div class="col-6">
+                                                                <input type="number" class="form-control bg-light"
+                                                                    name="bp_sys" placeholder="Sys (120)">
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <input type="number" class="form-control bg-light"
+                                                                    name="bp_dia" placeholder="Dia (80)">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label small text-muted fw-bold">Weight
+                                                            (kg)</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text bg-light border-end-0"><i
+                                                                    class="fas fa-weight text-primary"></i></span>
+                                                            <input type="number" step="0.1"
+                                                                class="form-control border-start-0 ps-0 bg-light"
+                                                                name="weight" placeholder="e.g. 70">
+                                                        </div>
+                                                    </div>
+                                                    <button type="submit"
+                                                        class="btn btn-primary w-100 rounded-pill py-2 mt-2">
+                                                        Save Record <i class="fas fa-robot ms-2"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                </div>
+            </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+        <script>
+            // Sidebar Toggle
+            var el = document.getElementById("wrapper");
+            var toggleButton = document.getElementById("menu-toggle");
+            if (toggleButton) {
+                toggleButton.onclick = function () {
+                    el.classList.toggle("toggled");
+                };
+            }
+
+            // Charts Logic - ApexCharts
+            document.addEventListener('DOMContentLoaded', async () => {
+                try {
+                    const response = await fetch('/vitals/data');
+                    const rawData = await response.json();
+                    console.log("Vitals Data:", rawData);
+
+                    // Helper to extract data
+                    // Sort ascending for charts
+                    const sortedData = rawData.sort((a, b) => new Date(a.recordedAt) - new Date(b.recordedAt));
+
+                    // Weight
+                    const weightData = sortedData.filter(v => v.type === 'weight');
+                    // Heart Rate
+                    const hrData = sortedData.filter(v => v.type === 'heart_rate');
+                    // BP
+                    const bpData = sortedData.filter(v => v.type === 'blood_pressure');
+
+                    const commonOptions = {
+                        chart: {
+                            type: 'area',
+                            height: 150,
+                            sparkline: { enabled: true }, // Cleaner look for small dash cards
+                            toolbar: { show: false },
+                            fontFamily: 'inherit'
+                        },
+                        stroke: {
+                            curve: 'smooth',
+                            width: 2
+                        },
+                        fill: {
+                            type: "gradient",
+                            gradient: {
+                                shadeIntensity: 1,
+                                opacityFrom: 0.45,
+                                opacityTo: 0.05,
+                                stops: [20, 100]
+                            }
+                        },
+                        dataLabels: { enabled: false },
+                        tooltip: {
+                            fixed: { enabled: false },
+                            x: { show: true, format: 'dd MMM' },
+                            y: { title: { formatter: function (seriesName) { return '' } } },
+                            marker: { show: false }
+                        }
+                    };
+
+                    // 1. Weight Chart
+                    const weightOptions = {
+                        ...commonOptions,
+                        series: [{
+                            name: 'Weight',
+                            data: weightData.map(d => ({
+                                x: new Date(d.recordedAt).getTime(),
+                                y: parseFloat(d.value)
+                            }))
+                        }],
+                        colors: ['#0d6efd'],
+                        xaxis: { type: 'datetime', tooltip: { enabled: false } }
+                    };
+                    new ApexCharts(document.querySelector("#weightChart"), weightOptions).render();
+
+                    // 2. Heart Rate Chart
+                    const hrOptions = {
+                        ...commonOptions,
+                        series: [{
+                            name: 'Heart Rate',
+                            data: hrData.map(d => ({
+                                x: new Date(d.recordedAt).getTime(),
+                                y: parseFloat(d.value)
+                            }))
+                        }],
+                        colors: ['#dc3545'],
+                        xaxis: { type: 'datetime', tooltip: { enabled: false } }
+                    };
+                    new ApexCharts(document.querySelector("#hrChart"), hrOptions).render();
+
+                    // 3. BP Chart (Systolic only or both? Let's try to parse 120/80)
+                    const sysData = bpData.map(d => ({ x: new Date(d.recordedAt).getTime(), y: parseFloat(d.value.split('/')[0]) }));
+                    const diaData = bpData.map(d => ({ x: new Date(d.recordedAt).getTime(), y: parseFloat(d.value.split('/')[1]) }));
+
+                    const bpOptions = {
+                        ...commonOptions,
+                        series: [
+                            { name: 'Systolic', data: sysData },
+                            { name: 'Diastolic', data: diaData }
+                        ],
+                        colors: ['#0dcaf0', '#0dcaf0'], // Same color, maybe dashed for one? Apex supports stroke dash array globally not per series easily in mixed? Actually stroke.dashArray: [0, 5] works
+                        stroke: {
+                            curve: 'smooth',
+                            width: 2,
+                            dashArray: [0, 5]
+                        },
+                        xaxis: { type: 'datetime', tooltip: { enabled: false } }
+                    };
+                    new ApexCharts(document.querySelector("#bpChart"), bpOptions).render();
+                } catch (error) {
+                    console.error('Error rendering charts:', error);
+                }
+            });
+
+        </script>
+</body>
+
+</html>

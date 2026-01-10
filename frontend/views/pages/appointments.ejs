@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="d-flex" id="wrapper">
+        <%- include('../partials/sidebar') %>
+            <div id="page-content-wrapper" class="main-gradient-bg">
+                <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
+                        <h2 class="fs-2 m-0 text-dark fw-bold">My Appointments</h2>
+                    </div>
+                </nav>
+                <div class="container-fluid px-4 mb-5">
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <div class="dash-card p-4 shadow-sm bg-white rounded-4 table-responsive h-100">
+                                <% if(appointments.length> 0) { %>
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th
+                                                    class="py-3 ps-3 rounded-start text-muted small text-uppercase fw-bold">
+                                                    Name</th>
+                                                <th class="py-3 text-muted small text-uppercase fw-bold">Status</th>
+                                                <th class="py-3 text-muted small text-uppercase fw-bold">Date & Time
+                                                </th>
+                                                <th class="py-3 text-muted small text-uppercase fw-bold"
+                                                    style="max-width: 200px;">Symptoms</th>
+                                                <th class="py-3 text-muted small text-uppercase fw-bold">Shared Reports
+                                                </th>
+                                                <th
+                                                    class="py-3 pe-3 rounded-end text-end text-muted small text-uppercase fw-bold">
+                                                    Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% appointments.forEach(function(appt) { %>
+                                                <tr>
+                                                    <td class="ps-3">
+                                                        <% if (user.role==='patient' ) { %>
+                                                            <div class="fw-bold text-dark text-uppercase">
+                                                                Dr. <%= appt.doctorId ? appt.doctorId.fullName
+                                                                    : 'Unknown' %>
+                                                            </div>
+                                                            <small class="text-muted">
+                                                                <%= appt.doctorId ? appt.doctorId.speciality : '' %>
+                                                            </small>
+                                                            <% } else { %>
+                                                                <div class="fw-bold text-dark text-uppercase">
+                                                                    <%= appt.patientId ? appt.patientId.fullName
+                                                                        : 'Unknown' %>
+                                                                </div>
+                                                                <small class="text-muted">Patient</small>
+                                                                <% } %>
+                                                    </td>
+                                                    <td>
+                                                        <span
+                                                            class="badge rounded-pill bg-<%= appt.status === 'confirmed' ? 'success' : (appt.status === 'pending' ? 'warning' : (appt.status === 'completed' ? 'secondary' : 'danger')) %> px-3">
+                                                            <%= appt.status.toUpperCase() %>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex flex-column">
+                                                            <span class="fw-bold small text-dark">
+                                                                <%= appt.date ? new Date(appt.date).toDateString() : ''
+                                                                    %>
+                                                            </span>
+                                                            <span class="small text-muted">
+                                                                <%= appt.timeSlot %>
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td style="max-width: 200px;">
+                                                        <span class="d-inline-block text-truncate w-100"
+                                                            title="<%= appt.symptoms || 'Not specified' %>">
+                                                            <%= appt.symptoms || 'Not specified' %>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <% if(appt.sharedReports && appt.sharedReports.length> 0) { %>
+                                                            <div class="d-flex flex-wrap gap-1">
+                                                                <% appt.sharedReports.forEach(function(rep) { %>
+                                                                    <a href="<%= rep.fileUrl %>" target="_blank"
+                                                                        class="badge bg-light text-primary border text-decoration-none"
+                                                                        title="<%= rep.title %>">
+                                                                        <i
+                                                                            class="fas <%= rep.mimeType && rep.mimeType.startsWith('image') ? 'fa-image' : 'fa-file-pdf' %> me-1"></i>
+                                                                        <%= rep.title %>
+                                                                    </a>
+                                                                    <% }) %>
+                                                            </div>
+                                                            <% } else { %>
+                                                                <small class="text-muted">-</small>
+                                                                <% } %>
+                                                    </td>
+                                                    <td class="text-end pe-3">
+                                                        <% if(user.role==='doctor' ) { %>
+                                                            <% if(appt.status==='pending' ) { %>
+                                                                <form action="/appointments/<%= appt._id %>/update"
+                                                                    method="POST" class="d-inline">
+                                                                    <input type="hidden" name="status"
+                                                                        value="confirmed">
+                                                                    <button type="submit"
+                                                                        class="btn btn-sm btn-success rounded-pill px-3">
+                                                                        <i class="fas fa-check-circle me-1"></i> Confirm
+                                                                    </button>
+                                                                </form>
+                                                                <% } else if(appt.status==='confirmed' ) { %>
+                                                                    <a href="/video-call/<%= appt._id %>"
+                                                                        class="btn btn-sm btn-primary rounded-pill px-3 me-1">
+                                                                        <i class="fas fa-video me-1"></i> Join
+                                                                    </a>
+                                                                    <form action="/appointments/<%= appt._id %>/update"
+                                                                        method="POST" class="d-inline">
+                                                                        <input type="hidden" name="status"
+                                                                            value="completed">
+                                                                        <button type="submit"
+                                                                            class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                                                                            Mark Complete
+                                                                        </button>
+                                                                    </form>
+                                                                    <% } else { %>
+                                                                        <span class="text-muted small">No actions</span>
+                                                                        <% } %>
+                                                                            <% } else { %>
+                                                                                <% if(appt.status==='confirmed' ) { %>
+                                                                                    <a href="/video-call/<%= appt._id %>"
+                                                                                        class="btn btn-sm btn-primary rounded-pill px-3">
+                                                                                        <i
+                                                                                            class="fas fa-video me-1"></i>
+                                                                                        Join
+                                                                                    </a>
+                                                                                    <% } else { %>
+                                                                                        <span
+                                                                                            class="text-muted small">Wait
+                                                                                            for confirmation</span>
+                                                                                        <% } %>
+                                                                                            <% } %>
+                                                    </td>
+                                                </tr>
+                                                <% }) %>
+                                        </tbody>
+                                    </table>
+                                    <% } else { %>
+                                        <div class="text-center py-5">
+                                            <i class="fas fa-calendar-times fs-1 text-muted opacity-25 mb-3"></i>
+                                            <p class="text-muted fw-bold">No appointments found</p>
+                                        </div>
+                                        <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+        <script>
+            var el = document.getElementById("wrapper");
+            var toggleButton = document.getElementById("menu-toggle");
+            if (toggleButton) {
+                toggleButton.onclick = function () {
+                    el.classList.toggle("toggled");
+                };
+            }
+        </script>
+</body>
+
+</html>

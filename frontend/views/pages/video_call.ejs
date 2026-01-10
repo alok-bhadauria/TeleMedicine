@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        #root {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ZegoCloud Container -->
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+    <script>
+        window.onload = function () {
+            // Function to get URL params if needed, but we use appointment ID from server
+            const roomID = "<%= appointment._id %>";
+            const userID = "<%= user._id %>";
+            const userName = "<%= user.fullName %>";
+            // Passed from server
+            const appID = <%= zegocloud.appID %>;
+            const serverSecret = "<%= zegocloud.serverSecret %>";
+
+            const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
+                appID,
+                serverSecret,
+                roomID,
+                userID,
+                userName
+            );
+
+            const zp = ZegoUIKitPrebuilt.create(kitToken);
+
+            // Start the call
+            zp.joinRoom({
+                container: document.querySelector("#root"),
+                sharedLinks: [{
+                    name: 'Meeting Link',
+                    url: window.location.origin + '/video-call/' + roomID
+                }],
+                scenario: {
+                    mode: ZegoUIKitPrebuilt.GroupCall, // Or use VideoConference
+                },
+                turnOnMicrophoneWhenJoining: true,
+                turnOnCameraWhenJoining: true,
+                showMyCameraToggleButton: true,
+                showMyMicrophoneToggleButton: true,
+                showAudioVideoSettingsButton: true,
+                showScreenSharingButton: true,
+                showTextChat: true,
+                showUserList: true,
+                maxUsers: 2, // Doctor + Patient
+                layout: "Auto",
+                showLayoutButton: true,
+                onLeaveRoom: () => {
+                    window.location.href = "<%= user.role === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard' %>";
+                }
+            });
+        };
+    </script>
+</body>
+
+</html>

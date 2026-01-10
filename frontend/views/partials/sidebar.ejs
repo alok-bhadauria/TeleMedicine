@@ -1,0 +1,91 @@
+<div id="sidebar-wrapper">
+    <div class="sidebar-heading">
+        <i class="fas fa-heartbeat me-2"></i> MediConnect
+    </div>
+    <div class="list-group list-group-flush my-3">
+        <% if (user.role==='patient' ) { %>
+            <a href="/patient/dashboard"
+                class="list-group-item list-group-item-action <%= originalUrl === '/patient/dashboard' || originalUrl === '/dashboard' ? 'active' : '' %>">
+                <i class="fas fa-columns me-3"></i>Dashboard
+            </a>
+            <a href="/doctors"
+                class="list-group-item list-group-item-action <%= originalUrl === '/doctors' ? 'active' : '' %>">
+                <i class="fas fa-user-md me-3"></i>Find Doctors
+            </a>
+            <a href="/reminders"
+                class="list-group-item list-group-item-action <%= originalUrl === '/reminders' ? 'active' : '' %>">
+                <i class="fas fa-bell me-3"></i>Reminders
+            </a>
+            <a href="/appointments"
+                class="list-group-item list-group-item-action <%= originalUrl === '/appointments' ? 'active' : '' %>">
+                <i class="fas fa-calendar-check me-3"></i>Appointments
+            </a>
+            <a href="/prescriptions"
+                class="list-group-item list-group-item-action <%= originalUrl === '/prescriptions' ? 'active' : '' %>">
+                <i class="fas fa-file-medical me-3"></i>Prescriptions
+            </a>
+            <a href="/health-track"
+                class="list-group-item list-group-item-action <%= originalUrl === '/health-track' ? 'active' : '' %>">
+                <i class="fas fa-heartbeat me-3"></i>Health Track
+            </a>
+            <a href="/reports"
+                class="list-group-item list-group-item-action <%= originalUrl === '/reports' ? 'active' : '' %>">
+                <i class="fas fa-file-alt me-3"></i>Reports
+            </a>
+            <a href="/messages"
+                class="list-group-item list-group-item-action <%= originalUrl === '/messages' ? 'active' : '' %>">
+                <i class="fas fa-comments me-3"></i>Messages
+            </a>
+            <% } else if (user.role==='doctor' ) { %>
+                <a href="/doctor/dashboard"
+                    class="list-group-item list-group-item-action <%= originalUrl === '/doctor/dashboard' || originalUrl === '/dashboard' ? 'active' : '' %>">
+                    <i class="fas fa-user-md me-3"></i>Dashboard
+                </a>
+                <a href="/appointments"
+                    class="list-group-item list-group-item-action <%= originalUrl === '/appointments' ? 'active' : '' %>">
+                    <i class="fas fa-calendar-check me-3"></i>My Appointments
+                </a>
+                <a href="/reminders"
+                    class="list-group-item list-group-item-action <%= originalUrl === '/reminders' ? 'active' : '' %>">
+                    <i class="fas fa-bell me-3"></i>Reminders
+                </a>
+                <a href="/patients"
+                    class="list-group-item list-group-item-action <%= originalUrl === '/patients' ? 'active' : '' %>">
+                    <i class="fas fa-users me-3"></i>My Patients
+                </a>
+                <a href="/messages"
+                    class="list-group-item list-group-item-action <%= originalUrl === '/messages' ? 'active' : '' %>">
+                    <i class="fas fa-comments me-3"></i>Messages
+                </a>
+                <% } else if (user.role==='admin' ) { %>
+                    <a href="/admin/dashboard"
+                        class="list-group-item list-group-item-action <%= originalUrl === '/admin/dashboard' ? 'active' : '' %>">
+                        <i class="fas fa-chart-pie me-3"></i>Dashboard
+                    </a>
+                    <a href="/admin/doctors"
+                        class="list-group-item list-group-item-action <%= originalUrl === '/admin/doctors' ? 'active' : '' %>">
+                        <i class="fas fa-user-md me-3"></i>Doctors
+                    </a>
+                    <a href="/messages"
+                        class="list-group-item list-group-item-action <%= originalUrl === '/messages' ? 'active' : '' %>">
+                        <i class="fas fa-comments me-3"></i>Messages
+                    </a>
+                    <a href="/admin/analytics"
+                        class="list-group-item list-group-item-action <%= originalUrl === '/admin/analytics' ? 'active' : '' %>">
+                        <i class="fas fa-chart-line me-3"></i>Analytics
+                    </a>
+                    <% } %>
+
+                        <a href="/profile"
+                            class="list-group-item list-group-item-action <%= originalUrl === '/profile' ? 'active' : '' %>">
+                            <i class="fas fa-user-circle me-3"></i>Profile
+                        </a>
+
+                        <div class="mt-4 px-3">
+                            <a href="/logout"
+                                class="btn btn-outline-danger w-100 rounded-pill d-flex align-items-center justify-content-center gap-2">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </div>
+    </div>
+</div>

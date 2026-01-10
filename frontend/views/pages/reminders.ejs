@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        .reminder-card {
+            transition: all 0.3s ease;
+        }
+
+        .reminder-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .completed-task {
+            opacity: 0.6;
+        }
+
+        .completed-task .task-title {
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="d-flex" id="wrapper">
+        <%- include('../partials/sidebar') %>
+
+            <div id="page-content-wrapper" class="main-gradient-bg">
+                <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
+                        <h2 class="fs-2 m-0 text-dark fw-bold">My Reminders</h2>
+                    </div>
+                </nav>
+
+                <div class="container-fluid px-4">
+                    <!-- Analytics Section -->
+                    <div class="row g-4 mb-4">
+                        <!-- Add Reminder Form -->
+                        <div class="col-lg-4">
+                            <div
+                                class="dash-card p-4 bg-white shadow-sm rounded-4 h-100 border-top border-4 border-warning">
+                                <h5 class="fw-bold mb-3 text-dark"><i
+                                        class="fas fa-plus-circle text-warning me-2"></i>Set New Reminder</h5>
+                                <form action="/reminders/add" method="POST">
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-bold text-muted">Type</label>
+                                        <select class="form-select bg-light border-0" name="type">
+                                            <option value="Medicine">💊 Medicine</option>
+                                            <option value="Appointment">📅 Appointment</option>
+                                            <option value="General">📝 General</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-bold text-muted">Description</label>
+                                        <input type="text" class="form-control bg-light border-0" name="description"
+                                            placeholder="Short description..." required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-bold text-muted">Time</label>
+                                        <input type="datetime-local" class="form-control bg-light border-0"
+                                            name="datetime" required>
+                                    </div>
+                                    <button type="submit"
+                                        class="btn btn-warning text-white w-100 rounded-pill fw-bold shadow-sm mt-2">
+                                        Add Reminder
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Reminder List -->
+                        <div class="col-lg-8">
+                            <div class="dash-card p-4 bg-white shadow-sm rounded-4 h-100">
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <h5 class="fw-bold text-dark m-0"><i
+                                            class="fas fa-list-ul text-primary me-2"></i>Upcoming & Recent</h5>
+                                </div>
+
+                                <% if(reminders.length> 0) { %>
+                                    <div class="vstack gap-3" style="max-height: 400px; overflow-y: auto;">
+                                        <% reminders.forEach(r=> { %>
+                                            <div
+                                                class="p-3 rounded-3 border reminder-card mb-0 <%= r.isCompleted ? 'bg-light completed-task' : 'bg-white' %>">
+                                                <div class="row align-items-center g-0">
+                                                    <!-- Left: Icon & Description -->
+                                                    <div class="col-5 d-flex align-items-center gap-3">
+                                                        <div class="rounded-circle p-2 d-flex align-items-center justify-content-center flex-shrink-0
+                                                        <%= r.type === 'Medicine' ? 'bg-danger bg-opacity-10 text-danger' : 
+                                                            (r.type === 'Appointment' ? 'bg-primary bg-opacity-10 text-primary' : 'bg-warning bg-opacity-10 text-warning') %>"
+                                                            style="width: 45px; height: 45px;">
+                                                            <i
+                                                                class="fas <%= r.type === 'Medicine' ? 'fa-pills' : (r.type === 'Appointment' ? 'fa-calendar-alt' : 'fa-sticky-note') %>"></i>
+                                                        </div>
+                                                        <h6 class="mb-0 fw-bold task-title text-dark text-truncate">
+                                                            <%= r.description %>
+                                                        </h6>
+                                                    </div>
+
+                                                    <!-- Middle: Time -->
+                                                    <div class="col-4 text-center">
+                                                        <span
+                                                            class="badge rounded-pill fw-normal px-4 py-2 fs-6 <%= new Date(r.datetime) < new Date() && !r.isCompleted ? 'bg-danger bg-opacity-10 text-danger' : 'bg-light text-secondary border' %>">
+                                                            <i
+                                                                class="far fa-clock me-2 <%= new Date(r.datetime) < new Date() && !r.isCompleted ? 'text-danger' : 'text-muted' %>"></i>
+                                                            <%= new Date(r.datetime).toLocaleString([], {
+                                                                dateStyle: 'medium' , timeStyle: 'short' }) %>
+                                                        </span>
+                                                    </div>
+
+                                                    <!-- Right: Actions -->
+                                                    <div class="col-3 d-flex justify-content-end gap-2 pr-3">
+                                                        <form action="/reminders/toggle/<%= r._id %>" method="POST">
+                                                            <button type="submit"
+                                                                class="btn btn-sm rounded-circle d-flex align-items-center justify-content-center shadow-sm border-0 <%= r.isCompleted ? 'btn-success' : 'btn-outline-secondary' %>"
+                                                                style="width: 42px; height: 42px; transition: all 0.2s;"
+                                                                title="<%= r.isCompleted ? 'Mark Undone' : 'Mark Done' %>">
+                                                                <i class="fas fa-check fs-5"></i>
+                                                            </button>
+                                                        </form>
+                                                        <form action="/reminders/delete/<%= r._id %>" method="POST"
+                                                            onsubmit="return confirm('Delete this reminder?');">
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-outline-danger rounded-circle d-flex align-items-center justify-content-center shadow-sm border-0 bg-white"
+                                                                style="width: 42px; height: 42px; transition: all 0.2s;"
+                                                                title="Delete">
+                                                                <i class="fas fa-trash-alt fs-5"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% }) %>
+                                    </div>
+                                    <% } else { %>
+                                        <div
+                                            class="text-center py-5 text-muted h-100 d-flex flex-column justify-content-center align-items-center">
+                                            <i class="fas fa-bell-slash fs-1 opacity-25 mb-3"></i>
+                                            <p>No reminders set. Add one now!</p>
+                                        </div>
+                                        <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Section -->
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="dash-card p-4 bg-white shadow-sm rounded-4 h-100">
+                                <h5 class="fw-bold text-muted mb-4">Overview</h5>
+                                <div style="height: 250px; position: relative;">
+                                    <div id="overviewChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="dash-card p-4 bg-white shadow-sm rounded-4 h-100">
+                                <h5 class="fw-bold text-muted mb-4">Reminder Types</h5>
+                                <div style="height: 250px; position: relative;">
+                                    <div id="typeChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+        <script>
+            var el = document.getElementById("wrapper");
+            var toggleButton = document.getElementById("menu-toggle");
+            if (toggleButton) {
+                toggleButton.onclick = function () {
+                    el.classList.toggle("toggled");
+                };
+            }
+
+            // Charts Logic
+            let overviewChart, typeChart;
+
+            const getChartColors = () => {
+                const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+                return {
+                    text: isDark ? '#94a3b8' : '#475569',
+                    grid: isDark ? '#334155' : '#e2e8f0',
+                    theme: isDark ? 'dark' : 'light'
+                };
+            };
+
+            async function initCharts() {
+                try {
+                    // Fetch data from API
+                    const response = await fetch('/reminders/data');
+                    const reminders = await response.json();
+
+                    // Process Data
+                    const total = reminders.length;
+                    const completed = reminders.filter(r => r.isCompleted).length;
+                    const pending = total - completed;
+
+                    const typeCounts = {
+                        Medicine: reminders.filter(r => r.type === 'Medicine').length,
+                        Appointment: reminders.filter(r => r.type === 'Appointment').length,
+                        General: reminders.filter(r => r.type === 'General').length
+                    };
+
+                    const colors = getChartColors();
+
+                    // 1. Overview Chart (Donut)
+                    const overviewOptions = {
+                        series: [completed, pending],
+                        labels: ['Completed', 'Pending'],
+                        chart: {
+                            type: 'donut',
+                            height: 250,
+                            background: 'transparent',
+                            fontFamily: 'inherit',
+                            toolbar: { show: false }
+                        },
+                        colors: ['#10b981', '#fbbf24'],
+                        plotOptions: {
+                            pie: {
+                                donut: {
+                                    size: '70%',
+                                    labels: {
+                                        show: true,
+                                        total: {
+                                            show: true,
+                                            label: 'Total',
+                                            color: colors.text,
+                                            formatter: function (w) {
+                                                return w.globals.seriesTotals.reduce((a, b) => a + b, 0)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        dataLabels: { enabled: false },
+                        legend: {
+                            position: 'bottom',
+                            labels: { colors: colors.text }
+                        },
+                        stroke: { show: false },
+                        theme: { mode: colors.theme }
+                    };
+
+                    // 2. Types Chart (Bar)
+                    const typeOptions = {
+                        series: [{
+                            name: 'Reminders',
+                            data: [typeCounts.Medicine, typeCounts.Appointment, typeCounts.General]
+                        }],
+                        chart: {
+                            type: 'bar',
+                            height: 250,
+                            background: 'transparent',
+                            fontFamily: 'inherit',
+                            toolbar: { show: false }
+                        },
+                        plotOptions: {
+                            bar: {
+                                borderRadius: 6,
+                                columnWidth: '50%',
+                                distributed: true,
+                            }
+                        },
+                        colors: ['#ef4444', '#3b82f6', '#f59e0b'],
+                        xaxis: {
+                            categories: ['Medicine', 'Appointment', 'General'],
+                            labels: {
+                                style: { colors: [colors.text, colors.text, colors.text], fontSize: '12px' }
+                            },
+                            axisBorder: { show: false },
+                            axisTicks: { show: false }
+                        },
+                        yaxis: {
+                            labels: { style: { colors: colors.text } }
+                        },
+                        grid: {
+                            borderColor: colors.grid,
+                            strokeDashArray: 4,
+                            xaxis: { lines: { show: false } }
+                        },
+                        legend: { show: false },
+                        theme: { mode: colors.theme }
+                    };
+
+                    // Render or Update
+                    if (overviewChart) {
+                        overviewChart.destroy();
+                        typeChart.destroy();
+                    }
+
+                    if (document.querySelector("#overviewChart")) {
+                        overviewChart = new ApexCharts(document.querySelector("#overviewChart"), overviewOptions);
+                        overviewChart.render();
+                    }
+
+                    if (document.querySelector("#typeChart")) {
+                        typeChart = new ApexCharts(document.querySelector("#typeChart"), typeOptions);
+                        typeChart.render();
+                    }
+
+                } catch (error) {
+                    console.error("Error loading charts:", error);
+                }
+            }
+
+            // Init on load
+            document.addEventListener('DOMContentLoaded', initCharts);
+
+            // Init on Theme Change
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'data-bs-theme') {
+                        initCharts();
+                    }
+                });
+            });
+            observer.observe(document.documentElement, { attributes: true });
+        </script>
+</body>
+
+</html>

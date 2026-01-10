@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="d-flex" id="wrapper">
+        <%- include('../partials/sidebar') %>
+            <div id="page-content-wrapper" class="main-gradient-bg">
+                <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
+                        <h2 class="fs-2 m-0 text-dark fw-bold">My Profile</h2>
+                    </div>
+                </nav>
+                <div class="container-fluid px-4 mb-5">
+                    <div class="row g-4 d-flex align-items-stretch"> <!-- Added align-items-stretch for equal height -->
+                        <!-- Left Column: Profile Summary Card -->
+                        <div class="col-lg-4">
+                            <div class="dash-card p-0 text-center overflow-hidden h-100">
+                                <div
+                                    class="welcome-card-bg p-5 d-flex flex-column align-items-center justify-content-center text-white position-relative">
+                                    <!-- Profile Image Wrapper with ring -->
+                                    <div class="position-relative mb-3">
+                                        <img src="<%= user.profilePic || '/images/default-profile.png' %>"
+                                            class="rounded-circle shadow" width="120" height="120"
+                                            style="object-fit:cover; border: 4px solid rgba(255,255,255,0.3);">
+                                        <label
+                                            class="btn btn-sm btn-light rounded-circle position-absolute bottom-0 end-0 shadow-sm"
+                                            style="width:35px; height:35px; display:flex; align-items:center; justify-content:center;"
+                                            onclick="document.getElementById('profileUpload').click()">
+                                            <i class="fas fa-camera text-primary"></i>
+                                        </label>
+                                    </div>
+                                    <h4 class="fw-bold mb-1">
+                                        <%= user.fullName %>
+                                    </h4>
+                                    <p class="mb-0 opacity-75 text-uppercase small letter-spacing-1">
+                                        <%= user.role %> Account
+                                    </p>
+                                    <p class="small opacity-50 mb-0">Member ID: <%= user._id %>
+                                    </p>
+                                </div>
+                                <div class="p-4 bg-white text-start h-100">
+                                    <h6 class="fw-bold text-muted mb-3 text-uppercase small">Contact Info</h6>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="stat-icon-wrapper bg-light text-primary me-3"
+                                            style="width:40px; height:40px; font-size:1rem;"><i
+                                                class="fas fa-envelope"></i></div>
+                                        <div class="overflow-hidden text-truncate"><small
+                                                class="text-muted d-block">Email</small><strong>
+                                                <%= user.email %>
+                                            </strong></div>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="stat-icon-wrapper bg-light text-primary me-3"
+                                            style="width:40px; height:40px; font-size:1rem;"><i
+                                                class="fas fa-phone"></i></div>
+                                        <div><small class="text-muted d-block">Phone</small><strong>
+                                                <%= user.mobileNumber || 'Not Set' %>
+                                            </strong></div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="stat-icon-wrapper bg-light text-primary me-3"
+                                            style="width:40px; height:40px; font-size:1rem;"><i
+                                                class="fas fa-map-marker-alt"></i></div>
+                                        <div><small class="text-muted d-block">Location</small><strong>
+                                                <%= user.address ? user.address.substring(0, 20) + (user.address.length>
+                                                    20 ? '...' : '') : 'Not Set' %>
+                                            </strong></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Edit Profile (Unified) -->
+                        <div class="col-lg-8">
+                            <div class="dash-card p-4 h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                                    <h5 class="fw-bold text-dark m-0">Edit Profile</h5>
+                                    <div>
+                                        <span class="badge bg-primary bg-opacity-10 text-primary">Personal Info</span>
+                                        <span class="badge bg-danger bg-opacity-10 text-danger ms-1">Security</span>
+                                    </div>
+                                </div>
+
+                                <!-- Personal Details Form -->
+                                <h6 class="fw-bold text-muted mb-3 small text-uppercase">Personal Information</h6>
+                                <form action="/profile/update" method="POST" enctype="multipart/form-data" class="mb-5">
+                                    <input type="file" name="profilePic" id="profileUpload" hidden
+                                        onchange="this.form.submit()">
+
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label small text-muted fw-bold">Full Name</label>
+                                            <input type="text" class="form-control" name="fullName"
+                                                value="<%= user.fullName %>" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small text-muted fw-bold">Mobile Number</label>
+                                            <input type="tel" class="form-control" name="mobileNumber"
+                                                value="<%= user.mobileNumber %>">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label small text-muted fw-bold">Date of Birth</label>
+                                            <input type="date" class="form-control" name="dob"
+                                                value="<%= user.dob ? new Date(user.dob).toISOString().split('T')[0] : '' %>">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label small text-muted fw-bold">Gender</label>
+                                            <select class="form-select" name="gender">
+                                                <option value="">Select</option>
+                                                <option value="Male" <%=user.gender==='Male' ? 'selected' : '' %>>Male
+                                                </option>
+                                                <option value="Female" <%=user.gender==='Female' ? 'selected' : '' %>
+                                                    >Female</option>
+                                                <option value="Other" <%=user.gender==='Other' ? 'selected' : '' %>
+                                                    >Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label small text-muted fw-bold">Blood Group</label>
+                                            <select class="form-select" name="bloodGroup">
+                                                <option value="">Select</option>
+                                                <option value="A+" <%=user.bloodGroup==='A+' ? 'selected' : '' %>>A+
+                                                </option>
+                                                <option value="A-" <%=user.bloodGroup==='A-' ? 'selected' : '' %>>A-
+                                                </option>
+                                                <option value="B+" <%=user.bloodGroup==='B+' ? 'selected' : '' %>>B+
+                                                </option>
+                                                <option value="O+" <%=user.bloodGroup==='O+' ? 'selected' : '' %>>O+
+                                                </option>
+                                                <option value="AB+" <%=user.bloodGroup==='AB+' ? 'selected' : '' %>>AB+
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label small text-muted fw-bold">Address</label>
+                                            <textarea class="form-control" name="address"
+                                                rows="2"><%= user.address %></textarea>
+                                        </div>
+
+                                        <% if(user.role==='doctor' ) { %>
+                                            <div class="col-md-6">
+                                                <label class="form-label small text-muted fw-bold">Speciality</label>
+                                                <input type="text" class="form-control" name="speciality"
+                                                    value="<%= user.speciality %>" placeholder="e.g. Cardiologist">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small text-muted fw-bold">Qualification</label>
+                                                <input type="text" class="form-control" name="qualification"
+                                                    value="<%= user.qualification %>" placeholder="e.g. MBBS, MD">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small text-muted fw-bold">Experience
+                                                    (Years)</label>
+                                                <input type="number" class="form-control" name="experience"
+                                                    value="<%= user.experience %>">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small text-muted fw-bold">Consultation Charges
+                                                    ($) / hour</label>
+                                                <input type="number" class="form-control" name="charges"
+                                                    value="<%= user.charges %>">
+                                            </div>
+
+                                            <div class="col-12 mt-4">
+                                                <label class="form-label small text-muted fw-bold">Clinic Location
+                                                    (Click map to set)</label>
+                                                <div id="clinicMap" class="rounded shadow-sm"
+                                                    style="height: 300px; width: 100%;"></div>
+                                                <input type="hidden" name="clinicLat" id="clinicLat"
+                                                    value="<%= user.clinicLocation ? user.clinicLocation.lat : '' %>">
+                                                <input type="hidden" name="clinicLng" id="clinicLng"
+                                                    value="<%= user.clinicLocation ? user.clinicLocation.lng : '' %>">
+                                                <small class="text-muted"><i class="fas fa-info-circle me-1"></i> Use
+                                                    the map to pin your clinic's exact location.</small>
+                                            </div>
+
+                                            <!-- Leaflet CSS & JS -->
+                                            <link rel="stylesheet"
+                                                href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+                                            <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', function () {
+                                                    // Default to some center or user's existing location
+                                                    var initialLat = <%= user.clinicLocation && user.clinicLocation.lat ? user.clinicLocation.lat : 20.5937 %>; // India center fallback
+                                                    var initialLng = <%= user.clinicLocation && user.clinicLocation.lng ? user.clinicLocation.lng : 78.9629 %>;
+                                                    var zoomLevel = <%= user.clinicLocation ? 15 : 5 %>;
+
+                                                    var map = L.map('clinicMap').setView([initialLat, initialLng], zoomLevel);
+
+                                                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                                        attribution: 'OpenStreetMap'
+                                                    }).addTo(map);
+
+                                                    var marker;
+                                                    // If exists, place initial marker
+                                                    if (<%= user.clinicLocation ? 'true' : 'false' %>) {
+                                                    marker = L.marker([initialLat, initialLng]).addTo(map);
+                                                }
+
+                                                map.on('click', function (e) {
+                                                    var lat = e.latlng.lat;
+                                                    var lng = e.latlng.lng;
+
+                                                    if (marker) {
+                                                        marker.setLatLng(e.latlng);
+                                                    } else {
+                                                        marker = L.marker(e.latlng).addTo(map);
+                                                    }
+
+                                                    document.getElementById('clinicLat').value = lat;
+                                                    document.getElementById('clinicLng').value = lng;
+                                                });
+                                            });
+                                            </script>
+                                            <% } %>
+
+                                                <div class="col-12 text-end">
+                                                    <button type="submit" class="btn btn-primary rounded-pill px-4">Save
+                                                        Information</button>
+                                                </div>
+                                    </div>
+                                </form>
+
+                                <!-- Security Form -->
+                                <hr class="my-4 opacity-10">
+                                <h6 class="fw-bold text-danger mb-3 small text-uppercase" id="security">Change Password
+                                </h6>
+                                <form action="/profile/change-password" method="POST">
+                                    <div class="row g-3 align-items-end">
+                                        <div class="col-md-4">
+                                            <label class="form-label small text-muted fw-bold">Current Password</label>
+                                            <input type="password" class="form-control" name="currentPassword" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label small text-muted fw-bold">New Password</label>
+                                            <input type="password" class="form-control" name="newPassword" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label small text-muted fw-bold">Confirm Password</label>
+                                            <input type="password" class="form-control" name="confirmPassword" required>
+                                        </div>
+                                        <div class="col-12 text-end mt-4">
+                                            <button type="submit"
+                                                class="btn btn-outline-danger rounded-pill px-4">Update
+                                                Password</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <%- include('../partials/footer') %>
+        <script>
+            var el = document.getElementById("wrapper");
+            var toggleButton = document.getElementById("menu-toggle");
+            if (toggleButton) {
+                toggleButton.onclick = function () {
+                    el.classList.toggle("toggled");
+                };
+            }
+        </script>
+</body>
+
+</html>

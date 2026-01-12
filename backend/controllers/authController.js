@@ -41,8 +41,17 @@ exports.signup = async (req, res) => {
         }
 
         await newUser.save();
-        req.flash('success_msg', 'You are now registered and can log in');
-        res.redirect('/login');
+
+        // Auto login
+        req.login(newUser, (err) => {
+            if (err) {
+                console.error("Auto Login Error:", err);
+                req.flash('success_msg', 'You are now registered. Please log in.');
+                return res.redirect('/login');
+            }
+            req.flash('success_msg', 'Welcome to MediConnect!');
+            res.redirect('/dashboard');
+        });
 
     } catch (err) {
         console.error("Signup Error:", err);

@@ -34,7 +34,13 @@ app.use(morgan('dev'));
 app.use(session({
     secret: process.env.SESSION_SECRET || 'secret',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    proxy: true, // Required for Render/Heroku to trust the proxy
+    cookie: {
+        secure: process.env.NODE_ENV === 'production', // Secure in production
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
 }));
 
 // Passport

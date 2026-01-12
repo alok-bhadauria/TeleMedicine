@@ -157,12 +157,11 @@
                                 <% if(contacts && contacts.length> 0) { %>
                                     <% contacts.forEach(c=> { %>
                                         <div class="contact-item d-flex align-items-center" data-id="<%= c._id %>"
-                                            data-name="<%= c.fullName %>" data-pic="<%= c.profilePic || '' %>"
-                                            onclick="selectContact('<%= c._id %>', '<%= c.fullName %>', '<%= c.profilePic || '' %>')">
+                                            data-name="<%= c.fullName %>" data-pic="<%= getProfilePic(c) %>"
+                                            onclick="selectContact('<%= c._id %>', '<%= c.fullName %>', '<%= getProfilePic(c) %>')">
 
-                                            <img src="<%= c.profilePic || '/img/default-user.png' %>"
-                                                class="contact-avatar me-3"
-                                                onerror="this.onerror=null; this.src=''; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                            <img src="<%= getProfilePic(c) %>" class="contact-avatar me-3"
+                                                onerror="this.onerror=null; this.src='/images/patient-default.png';">
                                             <div class="contact-avatar me-3" style="display:none; background: #e2e6ea;">
                                                 <%= c.fullName.charAt(0) %>
                                             </div>
@@ -413,7 +412,7 @@
                                 img.src = pic;
                                 img.style.display = 'block';
                             } else {
-                                img.src = '/img/default-user.png';
+                                img.src = '/images/patient-default.png';
                             }
 
                             // Load Messages

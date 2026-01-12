@@ -505,6 +505,36 @@ a {
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
+/* Modern Doctor Card */
+.doctor-card {
+    background: #ffffff;
+    border-radius: 24px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+}
+
+.doctor-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px -12px rgba(37, 99, 235, 0.25);
+    border-color: rgba(37, 99, 235, 0.3);
+}
+
+[data-bs-theme="dark"] .doctor-card {
+    background: var(--bg-white);
+    /* Slate 800 */
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+}
+
+[data-bs-theme="dark"] .doctor-card:hover {
+    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5);
+    border-color: var(--primary);
+}
+
 .welcome-card-bg {
     background: linear-gradient(120deg, #3b82f6 0%, #60a5fa 100%);
     /* Diagonal lighter gradient */
@@ -751,11 +781,298 @@ a {
     border: 1px solid #e2e8f0;
 }
 
+/* --- 7. Advanced Slide Animations --- */
+.slide-in-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+}
+
+.slide-in-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+}
+
+.slide-in-left.active,
+.slide-in-right.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* --- 8. Typewriter Effect --- */
+.typewriter-cursor::after {
+    content: '|';
+    animation: cursor-blink 1s step-end infinite;
+}
+
+@keyframes cursor-blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* --- 9. Dark Mode Overrides for Premium Elements --- */
+[data-bs-theme="dark"] .hero-dynamic-bg {
+    background: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 1) 0%, rgba(15, 23, 42, 1) 100%);
+}
+
+[data-bs-theme="dark"] .blob {
+    background: linear-gradient(180deg, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.15) 100%);
+    filter: blur(100px);
+}
+
+[data-bs-theme="dark"] .glass-card {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+[data-bs-theme="dark"] .bg-mesh-animated {
+    background-color: #0f172a;
+    background-image:
+        radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 0) 0, hsla(253, 16%, 7%, 0) 50%),
+        radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 0.2) 0, hsla(225, 39%, 30%, 0) 50%),
+        /* Visible in dark */
+        radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 0.2) 0, hsla(339, 49%, 30%, 0) 50%);
+}
+
+/* --- 10. 3D Tilt Effect & Spotlight --- */
+.hover-3d {
+    transition: transform 0.1s ease;
+    /* Fast transition for mouse follow */
+    transform-style: preserve-3d;
+}
+
+.hover-spotlight {
+    position: relative;
+    overflow: hidden;
+}
+
+.hover-spotlight::before {
+    content: '';
+    position: absolute;
+    top: var(--y, 50%);
+    left: var(--x, 50%);
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.hover-spotlight:hover::before {
+    opacity: 1;
+}
+
+/* --- 11. Floating Background Icons --- */
+.floating-icon {
+    position: absolute;
+    opacity: 0.15;
+    /* Increased opacity */
+    z-index: 0;
+    pointer-events: none;
+    animation: float-icon 12s infinite ease-in-out;
+    filter: blur(1px);
+    /* Soften edges */
+}
+
+@keyframes float-icon {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-30px) rotate(15deg);
+    }
+}
+
+[data-bs-theme="dark"] .floating-icon {
+    opacity: 0.1;
+    /* Increased opacity for dark mode */
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* --- 12. Magnetic Button Class --- */
+.magnetic-btn {
+    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+    display: inline-block;
+}
+
+/* --- 13. Animated ECG Line --- */
+.ecg-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0.4;
+}
+
+.ecg-svg {
+    width: 100%;
+    height: 100%;
+    stroke: var(--primary);
+    stroke-width: 2;
+    fill: none;
+    stroke-dasharray: 2000;
+    stroke-dashoffset: 2000;
+    animation: draw-ecg 4s linear infinite;
+    filter: drop-shadow(0 0 5px var(--primary));
+}
+
+@keyframes draw-ecg {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
 /* Profiles */
 .profile-avatar {
     width: 70px;
     height: 70px;
     border: 3px solid rgba(255, 255, 255, 0.5);
     object-fit: cover;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================
+   PREMIUM LANDING PAGE ENHANCEMENTS
+   ========================================= */
+
+/* --- 1. Dynamic Background --- */
+.hero-dynamic-bg {
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.05) 0%, rgba(255, 255, 255, 0) 50%);
+}
+
+.blob {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: linear-gradient(180deg, rgba(37, 99, 235, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.6;
+    z-index: -1;
+    animation: blob-float 20s infinite alternate;
+    pointer-events: none;
+    transition: all 0.5s ease-out;
+    /* Smooth follow delay */
+}
+
+@keyframes blob-float {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(30px, -50px) scale(1.1);
+    }
+
+    66% {
+        transform: translate(-20px, 20px) scale(0.9);
+    }
+
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+}
+
+/* --- 2. Scroll Animations (Reveal) --- */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+    will-change: opacity, transform;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-delay-1 {
+    transition-delay: 0.1s;
+}
+
+.reveal-delay-2 {
+    transition-delay: 0.2s;
+}
+
+.reveal-delay-3 {
+    transition-delay: 0.3s;
+}
+
+/* --- 3. Hover Effects --- */
+.hover-lift-lg {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+
+.hover-lift-lg:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+.hover-glow {
+    position: relative;
+    overflow: hidden;
+}
+
+.hover-glow::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+    transform: skewX(-25deg);
+    transition: none;
+}
+
+.hover-glow:hover::after {
+    left: 150%;
+    transition: left 0.7s ease-in-out;
+}
+
+/* --- 4. Text Animations --- */
+.text-gradient-animate {
+    background: linear-gradient(to right, #2563eb, #3b82f6, #2563eb);
+    background-size: 200% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: gradient-shift 3s linear infinite;
+}
+
+@keyframes gradient-shift {
+    to {
+        background-position: 200% center;
+    }
+}
+
+/* --- 5. Glassmorphism for Cards --- */
+.glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+}
+
+/* --- 6. Special Section Backgrounds --- */
+.bg-mesh-animated {
+    background-color: #ffffff;
+    background-image:
+        radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 0) 0, hsla(253, 16%, 7%, 0) 50%),
+        radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 0) 0, hsla(225, 39%, 30%, 0) 50%),
+        radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 0) 0, hsla(339, 49%, 30%, 0) 50%);
 }

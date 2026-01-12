@@ -4,7 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Dashboard</title>
+    <title>
+        <% if (title && title.indexOf('MediConnect')===-1) { %>MediConnect | <%= title %>
+                <% } else { %>
+                    <%= title %>
+                        <% } %>
+    </title>
+    <link rel="icon" type="image/png" href="/favicon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
@@ -17,7 +23,11 @@
             <div id="page-content-wrapper" class="main-gradient-bg">
                 <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
                     <div class="d-flex align-items-center">
-                        <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
+                        <button id="menu-toggle"
+                            class="btn btn-light bg-white rounded-circle shadow-sm me-3 d-flex align-items-center justify-content-center"
+                            style="width: 45px; height: 45px;">
+                            <i class="fas fa-align-left primary-text fs-5"></i>
+                        </button>
                         <h2 class="fs-2 m-0 text-dark fw-bold">Dashboard</h2>
                     </div>
                 </nav>

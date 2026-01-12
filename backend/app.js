@@ -57,6 +57,23 @@ app.use((req, res, next) => {
     res.locals.error = req.flash('error');
     res.locals.user = req.user || null;
     res.locals.originalUrl = req.originalUrl;
+    // Centralized Profile Picture Helper
+    res.locals.getProfilePic = (userOrDoc) => {
+        if (!userOrDoc) return '/images/patient-default.png'; // Fallback
+
+        // If profilePic exists and is not one of the old broken defaults
+        if (userOrDoc.profilePic &&
+            !userOrDoc.profilePic.includes('default-profile') &&
+            userOrDoc.profilePic.trim() !== '') {
+            return userOrDoc.profilePic;
+        }
+
+        // Return based on Role
+        if (userOrDoc.role === 'doctor') return '/images/doctor-default.png';
+        if (userOrDoc.role === 'admin') return '/images/admin-default.png';
+        return '/images/patient-default.png'; // Patient or others
+    };
+
     next();
 });
 

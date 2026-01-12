@@ -4,7 +4,7 @@ const User = require('../models/User');
 exports.getProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
-        res.render('pages/profile', { user: user, title: 'MediConnect | Profile' });
+        res.render('pages/profile', { user: user, title: 'Profile' });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');

@@ -1,17 +1,35 @@
 <%- include('../partials/header') %>
 
-    <!-- Hero Section -->
-    <section class="hero-section bg-mesh-1 d-flex align-items-center">
-        <div class="container">
+    <!-- Hero Section with Dynamic Background -->
+    <section class="hero-section hero-dynamic-bg d-flex align-items-center position-relative">
+        <!-- Floating Blob Background -->
+        <div class="blob" id="dynamicBlob"></div>
+
+        <!-- Floating Icons (Hero Only - Minimal) -->
+        <i class="fas fa-plus floating-icon text-primary fa-4x" style="top: 15%; left: 8%; animation-delay: 0s;"></i>
+        <i class="fas fa-heart floating-icon text-danger fa-4x" style="top: 65%; left: 4%; animation-delay: 2s;"></i>
+        <i class="fas fa-dna floating-icon text-success fa-4x" style="top: 25%; right: 40%; animation-delay: 4s;"></i>
+
+        <!-- ECG Background Animation -->
+        <div class="ecg-container">
+            <svg class="ecg-svg" viewBox="0 0 1000 150" preserveAspectRatio="none">
+                <path d="M0,75 H100 L120,40 L140,110 L160,20 L180,130 L200,75 H1000" />
+            </svg>
+        </div>
+
+        <div class="container position-relative z-1">
             <div class="row align-items-center">
-                <div class="col-lg-6 mb-5 mb-lg-0 fade-in-up">
-                    <div class="d-inline-flex align-items-center bg-white border rounded-pill px-3 py-1 mb-4 shadow-sm">
+                <!-- Text Column -->
+                <div class="col-lg-6 mb-5 mb-lg-0 slide-in-left">
+                    <div
+                        class="d-inline-flex align-items-center bg-white border rounded-pill px-3 py-1 mb-4 shadow-sm glass-card">
                         <span class="badge bg-success rounded-pill me-2">New</span>
                         <span class="small text-muted fw-bold">AI Health Assistant Enabled</span>
                     </div>
                     <h1 class="hero-heading">
                         Virtual Healthcare <br>
-                        <span class="text-primary">For You.</span>
+                        <span class="text-gradient-animate fw-bold typewriter-text" data-text="For You."></span><span
+                            class="typewriter-cursor"></span>
                     </h1>
                     <p class="hero-sub w-75">
                         MediConnect provides progressive, and affordable healthcare, accessible on mobile and online
@@ -19,47 +37,48 @@
                     </p>
                     <div class="d-flex flex-wrap gap-3">
                         <% if (typeof user !='undefined' && user) { %>
-                            <a href="/dashboard" class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow-lg">Go to
-                                Dashboard</a>
+                            <a href="/dashboard"
+                                class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow-lg hover-lift-lg hover-glow magnetic-btn">Go
+                                to Dashboard</a>
                             <% } else { %>
                                 <a href="/signup"
-                                    class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow-lg">Consult Now</a>
+                                    class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow-lg hover-lift-lg hover-glow magnetic-btn">Consult
+                                    Now</a>
                                 <a href="#how-it-works"
-                                    class="btn btn-outline-secondary btn-lg rounded-pill px-5 py-3 border-2">Learn
+                                    class="btn btn-outline-secondary btn-lg rounded-pill px-5 py-3 border-2 magnetic-btn">Learn
                                     More</a>
                                 <% } %>
                     </div>
                     <div class="mt-5 pt-4 border-top">
                         <div class="d-flex align-items-center gap-5">
                             <div>
-                                <h3 class="fw-bold mb-0">5k+</h3>
-                                <p class="text-muted small mb-0">Recovered Patients</p>
-                            </div>
-                            <div>
-                                <h3 class="fw-bold mb-0">98%</h3>
+                                <h3 class="fw-bold mb-0 text-gradient-animate"><span class="count-up"
+                                        data-target="98">0</span>%</h3>
                                 <p class="text-muted small mb-0">Satisfaction Rate</p>
                             </div>
                             <div>
-                                <h3 class="fw-bold mb-0">80+</h3>
+                                <h3 class="fw-bold mb-0 text-gradient-animate"><span class="count-up"
+                                        data-target="80">0</span>+</h3>
                                 <p class="text-muted small mb-0">Expert Doctors</p>
                             </div>
-                            is here.
+                            <div class="d-flex align-items-center">
+                                <span class="text-muted small">is here.</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 text-center fade-in-up" style="animation-delay: 0.2s;">
-                    <div class="position-relative d-inline-block">
-                        <!-- Background Blob -->
+
+                <!-- Image Column (Correctly inside Row) -->
+                <div class="col-lg-6 text-center slide-in-right" style="transition-delay: 0.2s;">
+                    <div class="position-relative d-inline-block hover-3d hover-spotlight" id="heroImageContainer">
                         <div
                             style="position: absolute; top: 10%; right: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(37,99,235,0.1) 0%, transparent 70%); z-index: -1;">
                         </div>
                         <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=1080&auto=format&fit=crop"
                             alt="TeleHealth Doctor" class="img-fluid rounded-4 shadow-lg mb-4"
                             style="max-height: 550px; transform: rotate(2deg);">
-
-                        <!-- Floating Card -->
-                        <div class="position-absolute bg-white p-3 rounded-4 shadow-lg d-flex align-items-center gap-3"
-                            style="bottom: 50px; left: -40px; border: 1px solid #f1f5f9;">
+                        <div class="position-absolute glass-card p-3 rounded-4 shadow-lg d-flex align-items-center gap-3 animate-float"
+                            style="bottom: 50px; left: -40px;">
                             <div class="bg-success bg-opacity-10 p-2 rounded-circle text-success">
                                 <i class="fas fa-video fa-lg"></i>
                             </div>
@@ -70,18 +89,19 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> <!-- End Row -->
+        </div>
     </section>
 
-    <!-- AI Health Assistant Showcase (New) -->
+    <!-- AI Health Assistant Showcase -->
     <section id="ai-features" class="py-5 bg-white border-top">
         <div class="container py-5">
             <div class="row align-items-center">
-                <div class="col-lg-6 mb-5 mb-lg-0 fade-in-up">
+                <div class="col-lg-6 mb-5 mb-lg-0 slide-in-left">
                     <img src="https://img.freepik.com/free-vector/chatbot-artificial-intelligence-abstract-concept-illustration_335657-3723.jpg"
-                        alt="AI Health Assistant" class="img-fluid rounded-4 shadow-lg">
+                        alt="AI Health Assistant" class="img-fluid rounded-4 shadow-lg hover-lift-lg hover-spotlight">
                 </div>
-                <div class="col-lg-6 fade-in-up" style="animation-delay: 0.2s;">
+                <div class="col-lg-6 slide-in-right" style="transition-delay: 0.2s;">
                     <div class="ps-lg-5">
                         <div
                             class="d-inline-flex align-items-center bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-1 mb-3">
@@ -89,50 +109,29 @@
                             <span class="small fw-bold">Advanced AI Technology</span>
                         </div>
                         <h2 class="section-title mb-4">Meet Your Personal Health Companions</h2>
-                        <p class="text-muted mb-4 lead">
-                            Experience the future of healthcare with our integrated AI assistants.
-                            Whether you need quick symptom checks or mental health support, we're here 24/7.
-                        </p>
-
+                        <p class="text-muted mb-4 lead">Experience the future of healthcare with our integrated AI
+                            assistants.</p>
                         <div class="d-flex flex-column gap-4">
-                            <!-- MediBot Feature -->
                             <div class="d-flex align-items-start">
-                                <div class="bg-primary text-white rounded-circle p-3 me-3 shrink-0">
-                                    <i class="fas fa-user-nurse fa-lg"></i>
-                                </div>
+                                <div class="bg-primary text-white rounded-circle p-3 me-3 shrink-0"><i
+                                        class="fas fa-user-nurse fa-lg"></i></div>
                                 <div>
-                                    <h5 class="fw-bold mb-1">MediBot AI &nbsp; (ChatBot AI)</h5>
-                                    <p class="text-muted small mb-0">Your intelligent primary care assistant. Ask about
-                                        symptoms, medications, or general health tips instantly.</p>
+                                    <h5 class="fw-bold mb-1">MediBot AI (ChatBot)</h5>
+                                    <p class="text-muted small mb-0">Your intelligent primary care assistant.</p>
                                 </div>
                             </div>
-
-                            <!-- Niramya Feature -->
                             <div class="d-flex align-items-start">
-                                <div class="bg-success text-white rounded-circle p-3 me-3 shrink-0">
-                                    <i class="fas fa-brain fa-lg"></i>
-                                </div>
+                                <div class="bg-success text-white rounded-circle p-3 me-3 shrink-0"><i
+                                        class="fas fa-brain fa-lg"></i></div>
                                 <div>
-                                    <h5 class="fw-bold mb-1">Niramya AI &nbsp; (Calling AI)</h5>
-                                    <p class="text-muted small mb-0">Advanced mental health and wellness support.
-                                        Powered by OmniDimension for empathetic and understanding conversations.</p>
+                                    <h5 class="fw-bold mb-1">Niramya AI (Support)</h5>
+                                    <p class="text-muted small mb-0">Advanced mental health and wellness support.</p>
                                 </div>
                             </div>
                         </div>
-
                         <div class="mt-5">
-                            <% if (typeof user !='undefined' && user) { %>
-                                <a href="/dashboard" class="btn btn-primary rounded-pill px-4 py-2 me-3 shadow-sm">
-                                    Try AI Assistants <i class="fas fa-arrow-right ms-2"></i>
-                                </a>
-                                <% } else { %>
-                                    <a href="/login" class="btn btn-primary rounded-pill px-4 py-2 me-3 shadow-sm">
-                                        Login to Chat <i class="fas fa-arrow-right ms-2"></i>
-                                    </a>
-                                    <a href="/signup" class="btn btn-outline-primary rounded-pill px-4 py-2">
-                                        Get Started
-                                    </a>
-                                    <% } %>
+                            <a href="/signup" class="btn btn-primary rounded-pill px-4 py-2 me-3 shadow-sm">Try AI
+                                Assistants</a>
                         </div>
                     </div>
                 </div>
@@ -147,187 +146,91 @@
             <div class="d-flex justify-content-center gap-5 flex-wrap opacity-50 grayscale">
                 <h4 class="text-muted mb-0"><i class="fas fa-hospital me-2"></i>MediCare</h4>
                 <h4 class="text-muted mb-0"><i class="fas fa-heartbeat me-2"></i>HealthPlus</h4>
-                <h4 class="text-muted mb-0"><i class="fas fa-user-md me-2"></i>DocConnect</h4>
-                <h4 class="text-muted mb-0"><i class="fas fa-clinic-medical me-2"></i>PharmaLive</h4>
             </div>
         </div>
     </div>
 
-    <!-- How It Works (New) -->
-    <section id="how-it-works" class="py-5 bg-mesh-2 position-relative">
-        <div class="container py-5">
-            <div class="section-header fade-in-up">
+    <!-- How It Works -->
+    <section id="how-it-works" class="py-5 bg-mesh-2 position-relative overflow-hidden">
+        <div class="container py-5 position-relative z-1">
+            <div class="section-header fade-in-up text-center mb-5">
                 <span class="section-label">Our Process</span>
                 <h2 class="section-title">How It Works</h2>
-                <p class="text-muted mx-auto w-50">Get the best medical care in just a few simple steps. No waiting
-                    lines, no hassle.</p>
             </div>
-
             <div class="row g-4">
-                <div class="col-md-4 fade-in-up" style="animation-delay: 0.1s;">
-                    <div class="step-card hover-card shadow-sm">
+                <div class="col-md-4 slide-in-left" style="transition-delay: 0.1s;">
+                    <div class="step-card hover-card shadow-sm hover-lift-lg hover-spotlight">
                         <span class="step-number">01</span>
-                        <div class="mb-4 text-primary">
-                            <i class="fas fa-user-plus fa-3x"></i>
-                        </div>
+                        <div class="mb-4 text-primary"><i class="fas fa-user-plus fa-3x"></i></div>
                         <h4>Create Account</h4>
-                        <p class="text-muted">Sign up in seconds. Fill in your basic medical history to help us
-                            understand you better.</p>
+                        <p class="text-muted">Sign up in seconds.</p>
                     </div>
                 </div>
-                <div class="col-md-4 fade-in-up" style="animation-delay: 0.2s;">
-                    <div class="step-card hover-card shadow-sm">
+                <div class="col-md-4 reveal" style="transition-delay: 0.2s;">
+                    <div class="step-card hover-card shadow-sm hover-lift-lg hover-spotlight">
                         <span class="step-number">02</span>
-                        <div class="mb-4 text-primary">
-                            <i class="fas fa-search-location fa-3x"></i>
-                        </div>
+                        <div class="mb-4 text-primary"><i class="fas fa-search-location fa-3x"></i></div>
                         <h4>Choose a Doctor</h4>
-                        <p class="text-muted">Browse through our list of verified specialists. Filter by rating,
-                            experience, or specialty.</p>
+                        <p class="text-muted">Browse specialists.</p>
                     </div>
                 </div>
-                <div class="col-md-4 fade-in-up" style="animation-delay: 0.3s;">
-                    <div class="step-card hover-card shadow-sm">
+                <div class="col-md-4 slide-in-right" style="transition-delay: 0.3s;">
+                    <div class="step-card hover-card shadow-sm hover-lift-lg hover-spotlight">
                         <span class="step-number">03</span>
-                        <div class="mb-4 text-primary">
-                            <i class="fas fa-video fa-3x"></i>
-                        </div>
+                        <div class="mb-4 text-primary"><i class="fas fa-video fa-3x"></i></div>
                         <h4>Get Consulted</h4>
-                        <p class="text-muted">Connect via high-quality video call. Get your diagnosis and prescription
-                            instantly.</p>
+                        <p class="text-muted">Connect instantly.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Features Grid (Refined) -->
-    <section class="py-5 bg-white">
-        <div class="container py-5">
-            <div class="row align-items-center">
-                <div class="col-lg-5 fade-in-up">
-                    <span class="section-label">Our Features</span>
-                    <h2 class="section-title mb-4">Why Choose MediConnect?</h2>
-                    <p class="text-muted mb-4">We are dedicated to providing the best digital healthcare experience. Our
-                        platform is built with patient convenience and data security in mind.</p>
-
-                    <ul class="list-unstyled">
-                        <li class="d-flex align-items-start mb-3">
-                            <i class="fas fa-check-circle text-primary mt-1 me-3"></i>
-                            <div>
-                                <h6 class="fw-bold mb-1">AI-Powered Assistance</h6>
-                                <p class="small text-muted">Smart symptom checker before you meet the doctor.</p>
-                            </div>
-                        </li>
-                        <li class="d-flex align-items-start mb-3">
-                            <i class="fas fa-check-circle text-primary mt-1 me-3"></i>
-                            <div>
-                                <h6 class="fw-bold mb-1">Secure Health Records</h6>
-                                <p class="small text-muted">Encryption ensures your data stays private always.</p>
-                            </div>
-                        </li>
-                        <li class="d-flex align-items-start mb-3">
-                            <i class="fas fa-check-circle text-primary mt-1 me-3"></i>
-                            <div>
-                                <h6 class="fw-bold mb-1">24/7 Availability</h6>
-                                <p class="small text-muted">Doctors and support available round the clock.</p>
-                            </div>
-                        </li>
-                    </ul>
-                    <a href="/signup" class="btn btn-primary rounded-pill px-4 mt-2">Learn More</a>
-                </div>
-                <div class="col-lg-6 offset-lg-1 fade-in-up" style="animation-delay: 0.2s;">
-                    <div class="row g-3">
-                        <div class="col-6">
-                            <div class="p-4 bg-light rounded-4 mb-3 text-center h-100 border">
-                                <i class="fas fa-user-md fa-2x text-primary mb-3"></i>
-                                <h5 class="fw-bold">Verified Doctors</h5>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="p-4 bg-light rounded-4 mb-3 text-center h-100 border">
-                                <i class="fas fa-prescription-bottle-alt fa-2x text-warning mb-3"></i>
-                                <h5 class="fw-bold">E-Prescription</h5>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="p-4 bg-light rounded-4 mb-3 text-center h-100 border">
-                                <i class="fas fa-comments fa-2x text-success mb-3"></i>
-                                <h5 class="fw-bold">Free Chat</h5>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="p-4 bg-light rounded-4 mb-3 text-center h-100 border">
-                                <i class="fas fa-ambulance fa-2x text-danger mb-3"></i>
-                                <h5 class="fw-bold">Emergency</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Specialists (New) -->
-    <section id="specialists" class="py-5 bg-light">
-        <div class="container py-5">
-            <div class="section-header">
+    <!-- Specialists -->
+    <section id="specialists" class="py-5 bg-light position-relative overflow-hidden">
+        <div class="container py-5 position-relative z-1">
+            <div class="section-header text-center mb-5">
                 <span class="section-label">Our Team</span>
                 <h2 class="section-title">Meet Our Specialists</h2>
-                <p class="text-muted w-50 mx-auto">Top-rated doctors from various fields ready to assist you.</p>
             </div>
-
-            <!-- Carousel / Grid Placeholder -->
             <div class="row g-4">
-                <!-- Doctor 1 -->
-                <div class="col-md-3">
-                    <div class="card border-0 shadow-sm h-100 hover-card">
+                <div class="col-md-3 reveal">
+                    <div class="card border-0 shadow-sm h-100 hover-lift-lg hover-spotlight">
                         <img src="https://img.freepik.com/free-photo/doctor-offering-medical-teleconsultation_23-2149329007.jpg"
-                            class="card-img-top" style="height: 250px; object-fit: cover; object-position: top;"
-                            alt="Dr. John">
+                            class="card-img-top" style="height: 250px; object-fit: cover;" alt="Dr. Sarah">
                         <div class="card-body text-center">
                             <h5 class="fw-bold">Dr. Sarah West</h5>
                             <p class="text-primary small fw-bold">CARDIOLOGIST</p>
-                            <p class="text-muted small">10+ Years Experience</p>
                         </div>
                     </div>
                 </div>
-                <!-- Doctor 2 -->
-                <div class="col-md-3">
-                    <div class="card border-0 shadow-sm h-100 hover-card">
+                <div class="col-md-3 reveal" style="transition-delay: 0.1s;">
+                    <div class="card border-0 shadow-sm h-100 hover-lift-lg hover-spotlight">
                         <img src="https://img.freepik.com/free-photo/portrait-smiling-handsome-male-doctor-man_171337-5058.jpg"
-                            class="card-img-top" style="height: 250px; object-fit: cover; object-position: top;"
-                            alt="Dr. Mark">
+                            class="card-img-top" style="height: 250px; object-fit: cover;" alt="Dr. Mark">
                         <div class="card-body text-center">
                             <h5 class="fw-bold">Dr. Mark Lee</h5>
                             <p class="text-primary small fw-bold">DERMATOLOGIST</p>
-                            <p class="text-muted small">8 Years Experience</p>
                         </div>
                     </div>
                 </div>
-                <!-- Doctor 3 -->
-                <div class="col-md-3">
-                    <div class="card border-0 shadow-sm h-100 hover-card">
+                <div class="col-md-3 reveal" style="transition-delay: 0.2s;">
+                    <div class="card border-0 shadow-sm h-100 hover-lift-lg hover-spotlight">
                         <img src="https://img.freepik.com/free-photo/medium-shot-smiley-doctor-with-coat_23-2148814212.jpg"
-                            class="card-img-top" style="height: 250px; object-fit: cover; object-position: top;"
-                            alt="Dr. Emily">
+                            class="card-img-top" style="height: 250px; object-fit: cover;" alt="Dr. Emily">
                         <div class="card-body text-center">
                             <h5 class="fw-bold">Dr. Emily Chen</h5>
                             <p class="text-primary small fw-bold">PEDIATRICIAN</p>
-                            <p class="text-muted small">12 Years Experience</p>
                         </div>
                     </div>
                 </div>
-                <!-- Doctor 4 -->
-                <div class="col-md-3">
-                    <div class="card border-0 shadow-sm h-100 hover-card">
+                <div class="col-md-3 reveal" style="transition-delay: 0.3s;">
+                    <div class="card border-0 shadow-sm h-100 hover-lift-lg hover-spotlight">
                         <img src="https://img.freepik.com/free-photo/young-doctor-getting-ready-work_23-2149393691.jpg"
-                            class="card-img-top" style="height: 250px; object-fit: cover; object-position: top;"
-                            alt="Dr. Alex">
+                            class="card-img-top" style="height: 250px; object-fit: cover;" alt="Dr. Alex">
                         <div class="card-body text-center">
                             <h5 class="fw-bold">Dr. Alex Root</h5>
                             <p class="text-primary small fw-bold">PSYCHIATRIST</p>
-                            <p class="text-muted small">15 Years Experience</p>
                         </div>
                     </div>
                 </div>
@@ -338,72 +241,9 @@
         </div>
     </section>
 
-    <!-- FAQ (New) -->
-    <section id="faq" class="py-5 bg-white">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="section-header mb-5 text-center">
-                        <span class="section-label">FAQ</span>
-                        <h2 class="section-title">Common Questions</h2>
-                    </div>
-
-                    <div class="accordion" id="accordionFAQ">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseOne">
-                                    How do I consult a doctor?
-                                </button>
-                            </h2>
-                            <div id="collapseOne" class="accordion-collapse collapse show"
-                                data-bs-parent="#accordionFAQ">
-                                <div class="accordion-body">
-                                    Simply sign up, choose a specialist from our list, and click on "Book Appointment".
-                                    You can choose a suitable time slot and pay online.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseTwo">
-                                    Is my data safe?
-                                </button>
-                            </h2>
-                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
-                                <div class="accordion-body">
-                                    Absolutely. We use end-to-end encryption for all video calls and messages. Your
-                                    medical records are stored on secure cloud servers complying with health data
-                                    regulations.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseThree">
-                                    Can I get a prescription?
-                                </button>
-                            </h2>
-                            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
-                                <div class="accordion-body">
-                                    Yes, after your consultation, the doctor will generate a digital prescription which
-                                    you can download from your dashboard and use at any pharmacy.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-
-    <!-- Call to Action -->
-    <section class="py-5 bg-mesh-1">
-        <div class="container py-5">
+    <!-- Call to Action (Cleaner - No Particles) -->
+    <section class="py-5 bg-mesh-animated reveal position-relative overflow-hidden">
+        <div class="container py-5 position-relative z-1">
             <div class="bg-primary rounded-4 p-5 text-center text-white position-relative overflow-hidden"
                 style="background: var(--gradient-primary);">
                 <div
@@ -413,7 +253,7 @@
                     <h2 class="fw-bold text-white mb-3 display-5">Ready to Get Started?</h2>
                     <p class="lead mb-4 opacity-75">Join over 10,000+ users trusting MediConnect for their health.</p>
                     <a href="/signup"
-                        class="btn btn-light text-primary fw-bold rounded-pill px-5 py-3 shadow-lg hover-scale">Create
+                        class="btn btn-light text-primary fw-bold rounded-pill px-5 py-3 shadow-lg hover-lift-lg magnetic-btn">Create
                         Free Account</a>
                 </div>
             </div>
@@ -421,3 +261,113 @@
     </section>
 
     <%- include('../partials/footer') %>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+
+                // 1. Observer
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                            if (entry.target.querySelector('.typewriter-text')) {
+                                startTypewriter(entry.target.querySelector('.typewriter-text'));
+                            }
+                        } else {
+                            entry.target.classList.remove('active');
+                        }
+                    });
+                }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+                document.querySelectorAll('.reveal, .fade-in-up, .slide-in-left, .slide-in-right').forEach(el => observer.observe(el));
+
+                // 2. Typewriter
+                function startTypewriter(element) {
+                    if (element.dataset.isTyping === "true") return;
+                    const text = element.getAttribute('data-text');
+                    if (element.textContent === text) return;
+                    element.dataset.isTyping = "true";
+                    element.textContent = '';
+                    let i = 0;
+                    function type() {
+                        if (i < text.length) {
+                            element.textContent += text.charAt(i);
+                            i++;
+                            setTimeout(type, 100);
+                        } else {
+                            element.dataset.isTyping = "false";
+                        }
+                    }
+                    type();
+                }
+
+                // 3. Blob
+                const blob = document.getElementById('dynamicBlob');
+                if (blob) {
+                    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+                    let blobX = window.innerWidth / 2, blobY = window.innerHeight / 2;
+                    document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+                    function animateBlob() {
+                        blobX += (mouseX - blobX) * 0.04;
+                        blobY += (mouseY - blobY) * 0.04;
+                        blob.style.transform = `translate(${blobX - 300}px, ${blobY - 300}px)`;
+                        requestAnimationFrame(animateBlob);
+                    }
+                    animateBlob();
+                }
+
+                // 4. Spotlight
+                document.querySelectorAll('.hover-spotlight').forEach(el => {
+                    el.addEventListener('mousemove', e => {
+                        const rect = el.getBoundingClientRect();
+                        el.style.setProperty('--x', `${e.clientX - rect.left}px`);
+                        el.style.setProperty('--y', `${e.clientY - rect.top}px`);
+                    });
+                });
+
+                // 5. Tilt
+                const tiltEl = document.getElementById('heroImageContainer');
+                if (tiltEl) {
+                    tiltEl.addEventListener('mousemove', e => {
+                        const rect = tiltEl.getBoundingClientRect();
+                        const x = (e.clientX - rect.left) - rect.width / 2;
+                        const y = (e.clientY - rect.top) - rect.height / 2;
+                        tiltEl.style.transform = `perspective(1000px) rotateX(${-y / 20}deg) rotateY(${x / 20}deg)`;
+                    });
+                    tiltEl.addEventListener('mouseleave', () => tiltEl.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)');
+                }
+
+                // 6. Magnetic
+                document.querySelectorAll('.magnetic-btn').forEach(btn => {
+                    btn.addEventListener('mousemove', e => {
+                        const rect = btn.getBoundingClientRect();
+                        const x = e.clientX - rect.left - rect.width / 2;
+                        const y = e.clientY - rect.top - rect.height / 2;
+                        btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px) scale(1.05)`;
+                    });
+                    btn.addEventListener('mouseleave', () => btn.style.transform = 'translate(0,0) scale(1)');
+                });
+
+                // 7. Count Up
+                function animateValue(obj, start, end, duration) {
+                    let startTimestamp = null;
+                    const step = (timestamp) => {
+                        if (!startTimestamp) startTimestamp = timestamp;
+                        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                        obj.innerHTML = Math.floor(progress * (end - start) + start);
+                        if (progress < 1) window.requestAnimationFrame(step);
+                    };
+                    window.requestAnimationFrame(step);
+                }
+                const statsObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const target = parseInt(entry.target.getAttribute('data-target'));
+                            if (entry.target.textContent == '0') animateValue(entry.target, 0, target, 2000);
+                            statsObserver.unobserve(entry.target);
+                        }
+                    });
+                });
+                document.querySelectorAll('.count-up').forEach(el => statsObserver.observe(el));
+            });
+        </script>

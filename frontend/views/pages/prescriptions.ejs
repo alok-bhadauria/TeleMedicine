@@ -45,10 +45,10 @@
                                                 <tr>
                                                     <td class="ps-3">
                                                         <div class="d-flex align-items-center">
-                                                            <img src="<%= pres.doctorPic || '/images/default-profile.png' %>"
+                                                            <img src="<%= getProfilePic({ profilePic: pres.doctorPic, role: 'doctor' }) %>"
                                                                 class="rounded-circle me-3 shadow-sm" width="40"
                                                                 height="40" style="object-fit: cover;"
-                                                                onerror="this.onerror=null; this.src='/images/default-profile.png';">
+                                                                onerror="this.onerror=null; this.src='/images/doctor-default.png';">
                                                             <div>
                                                                 <div class="fw-bold text-dark text-uppercase">Dr. <%=
                                                                         pres.doctorName %>
@@ -116,10 +116,10 @@
                             <div class="row mb-5">
                                 <div class="col-md-6">
                                     <div class="d-flex align-items-center">
-                                        <img src="<%= pres.doctorPic || '/images/default-profile.png' %>"
+                                        <img src="<%= getProfilePic({ profilePic: pres.doctorPic, role: 'doctor' }) %>"
                                             class="rounded-circle me-3 border" width="60" height="60"
                                             style="object-fit: cover;"
-                                            onerror="this.onerror=null; this.src='/images/default-profile.png';">
+                                            onerror="this.onerror=null; this.src='/images/doctor-default.png';">
                                         <div>
                                             <h5 class="fw-bold text-dark mb-0">Dr. <%= pres.doctorName %>
                                             </h5>

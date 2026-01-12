@@ -41,28 +41,40 @@
                         <% if(doctors.length> 0) { %>
                             <% doctors.forEach(function(doc) { %>
                                 <div class="col-md-6 col-lg-4">
-                                    <div class="dash-card h-100 p-0 border-0 shadow-sm overflow-hidden d-flex flex-column hover-elevate transition-all"
-                                        style="border-radius: 1rem; background: #fff;">
+                                    <div class="doctor-card d-flex flex-column">
                                         <!-- Header / Image -->
                                         <div class="position-relative">
-                                            <img src="<%= doc.profilePic || '/images/default-profile.png' %>"
-                                                class="w-100" style="height: 220px; object-fit: cover;"
-                                                alt="<%= doc.fullName %>">
-                                            <div class="position-absolute top-0 start-0 w-100 h-100"
-                                                style="background: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.8));">
+                                            <img src="<%= getProfilePic(doc) %>" class="w-100"
+                                                style="height: 240px; object-fit: cover;" alt="<%= doc.fullName %>">
+                                            <div class="position-absolute bottom-0 start-0 w-100 h-50"
+                                                style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);">
                                             </div>
-                                            <div class="position-absolute bottom-0 start-0 w-100 p-3 text-white">
-                                                <h5 class="fw-bold mb-0 text-shadow">Dr. <%= doc.fullName %>
+                                            <div class="position-absolute bottom-0 start-0 w-100 p-4 text-white">
+                                                <h5 class="fw-bold mb-1 text-shadow text-white display-font ls-tight">
+                                                    Dr. <%= doc.fullName %>
                                                 </h5>
-                                                <small class="opacity-75 text-shadow">
+                                                <span
+                                                    class="badge bg-white text-primary bg-opacity-90 backdrop-blur-sm rounded-pill px-3 fw-medium">
                                                     <%= doc.speciality %>
-                                                </small>
+                                                </span>
                                             </div>
-                                            <span
-                                                class="position-absolute top-0 end-0 m-3 badge bg-white text-primary shadow-sm rounded-pill px-3 py-2">
-                                                <i class="fas fa-star text-warning me-1"></i>
-                                                <%= doc.rating || 'New' %>
-                                            </span>
+                                            <% if (!doc.rating || doc.rating==='New' ) { %>
+                                                <div class="position-absolute top-0 end-0 m-3">
+                                                    <span
+                                                        class="badge bg-primary text-white shadow-lg rounded-pill px-3 py-2 fw-bold text-uppercase tracking-wider"
+                                                        style="font-size: 0.7rem;">
+                                                        <i class="fas fa-star me-1 animate-pulse"></i> New
+                                                    </span>
+                                                </div>
+                                                <% } else { %>
+                                                    <div class="position-absolute top-0 end-0 m-3">
+                                                        <span
+                                                            class="badge bg-warning text-dark shadow-sm rounded-pill px-3 py-2 fw-bold">
+                                                            <i class="fas fa-star me-1"></i>
+                                                            <%= doc.rating %>
+                                                        </span>
+                                                    </div>
+                                                    <% } %>
                                         </div>
 
                                         <!-- Body -->

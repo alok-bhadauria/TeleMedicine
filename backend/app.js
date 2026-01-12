@@ -31,6 +31,7 @@ app.use(cors());
 app.use(morgan('dev'));
 
 // Session
+app.set('trust proxy', 1); // Trust first proxy (Render/Heroku)
 app.use(session({
     secret: process.env.SESSION_SECRET || 'secret',
     resave: false,

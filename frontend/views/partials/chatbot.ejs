@@ -256,20 +256,36 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message })
                 });
-                const data = await res.json();
 
-                // Remove Loader
-                document.getElementById(loaderId).remove();
+                // Check for JSON response
+                const contentType = res.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    const data = await res.json();
 
-                if (data.success) {
-                    appendMessage(data.reply, 'ai');
+                    if (document.getElementById(loaderId)) document.getElementById(loaderId).remove();
+
+                    if (data.success) {
+                        appendMessage(data.reply, 'ai');
+                    } else {
+                        appendMessage(`Error: ${data.error || "Sorry, I couldn't process that."}`, 'ai');
+                    }
                 } else {
-                    appendMessage(`Error: ${data.error || "Sorry, I couldn't process that."}`, 'ai');
+                    // Non-JSON response (likely HTML error or Redirect)
+                    if (document.getElementById(loaderId)) document.getElementById(loaderId).remove();
+
+                    if (res.status === 401 || res.status === 403 || res.redirected) {
+                        appendMessage("Session expired. Please refresh the page.", 'ai');
+                    } else {
+                        const text = await res.text();
+                        console.error("Non-JSON API Response:", text);
+                        appendMessage("Server error. Please try again later.", 'ai');
+                    }
                 }
+
             } catch (err) {
                 console.error(err);
                 if (document.getElementById(loaderId)) document.getElementById(loaderId).remove();
-                appendMessage("Network error. Please try again.", 'ai');
+                appendMessage("Connection error. Please check your internet.", 'ai');
             }
             scrollToBottom();
         });

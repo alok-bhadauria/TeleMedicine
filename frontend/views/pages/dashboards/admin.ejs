@@ -110,16 +110,28 @@
 
                     <!-- Analytics Charts Section -->
                     <div class="row g-4 mb-4">
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
                             <div class="dash-card p-4 bg-white shadow-sm rounded-4 h-100">
-                                <h5 class="fw-bold text-muted mb-4">Platform User Distribution</h5>
-                                <canvas id="userDistributionChart"></canvas>
+                                <h5 class="fw-bold text-muted mb-4 text-center">User Distribution</h5>
+                                <div style="height: 300px; position: relative;">
+                                    <div id="userChart"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
                             <div class="dash-card p-4 bg-white shadow-sm rounded-4 h-100">
-                                <h5 class="fw-bold text-muted mb-4">Platform Growth (Active Users)</h5>
-                                <canvas id="growthChart"></canvas>
+                                <h5 class="fw-bold text-muted mb-4 text-center">Appointment Status</h5>
+                                <div style="height: 300px; position: relative;">
+                                    <div id="appointmentChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="dash-card p-4 bg-white shadow-sm rounded-4 h-100">
+                                <h5 class="fw-bold text-muted mb-4 text-center">System Activity</h5>
+                                <div style="height: 300px; position: relative;">
+                                    <div id="activityChart"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -210,6 +222,8 @@
 
     <%- include('../../partials/footer') %>
 
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
         <script>
             // Toggle Sidebar
             var el = document.getElementById("wrapper");
@@ -220,43 +234,154 @@
                 };
             }
 
-            // Charts Initialization
-            const analyticsData = <% - analyticsData || '{}' %>;
+            // Charts Initialization with Dynamic Theme Support
+            document.addEventListener('DOMContentLoaded', async () => {
+                let userChart, appointmentChart, activityChart;
+                let chartData = null;
 
-            if (analyticsData.roles) {
-                // Distribution Chart
-                const ctx1 = document.getElementById('userDistributionChart').getContext('2d');
-                new Chart(ctx1, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Patients', 'Doctors'],
-                        datasets: [{
-                            data: analyticsData.roles,
-                            backgroundColor: ['#fbbf24', '#3b82f6'],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: { cutout: '70%', plugins: { legend: { position: 'bottom' } } }
+                // 1. Fetch Data Once
+                try {
+                    const res = await fetch('/admin/chart-data');
+                    if (!res.ok) throw new Error('Failed to fetch data');
+                    chartData = await res.json();
+                } catch (err) {
+                    console.error("Error loading charts:", err);
+                    return;
+                }
+
+                // 2. Render Function
+                const renderCharts = () => {
+                    const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+
+                    // Colors based on theme
+                    // Light: Text #64748b (slate-500), Dark: Text #cbd5e1 (slate-300)
+                    const textColor = isDark ? '#cbd5e1' : '#64748b';
+                    const gridColor = isDark ? '#334155' : '#e2e8f0';
+
+                    const baseColors = {
+                        primary: '#6366f1',
+                        secondary: '#ec4899',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        info: '#3b82f6'
+                    };
+
+                    // Common Options
+                    const commonOptions = {
+                        chart: {
+                            foreColor: textColor,
+                            fontFamily: 'inherit',
+                            toolbar: { show: false },
+                            animations: { enabled: true }
+                        },
+                        grid: { borderColor: gridColor },
+                        dataLabels: { enabled: false },
+                        legend: { position: 'bottom', labels: { colors: textColor } },
+                        tooltip: { theme: isDark ? 'dark' : 'light' }
+                    };
+
+                    // --- User Chart ---
+                    if (userChart) userChart.destroy();
+                    const userOptions = {
+                        ...commonOptions,
+                        series: chartData.users.data,
+                        labels: chartData.users.labels,
+                        chart: { type: 'donut', height: 300, ...commonOptions.chart },
+                        colors: [baseColors.primary, baseColors.secondary],
+                        plotOptions: {
+                            pie: {
+                                donut: {
+                                    labels: {
+                                        show: true,
+                                        total: {
+                                            show: true,
+                                            label: 'Total Users',
+                                            color: textColor
+                                        },
+                                        value: { color: textColor }
+                                    }
+                                }
+                            }
+                        }
+                    };
+                    userChart = new ApexCharts(document.querySelector("#userChart"), userOptions);
+                    userChart.render();
+
+                    // --- Appointment Chart ---
+                    if (appointmentChart) appointmentChart.destroy();
+                    const appOptions = {
+                        ...commonOptions,
+                        series: chartData.appointments.data,
+                        labels: chartData.appointments.labels,
+                        chart: { type: 'donut', height: 300, ...commonOptions.chart },
+                        colors: [baseColors.warning, baseColors.success, '#ef4444'],
+                        plotOptions: {
+                            pie: {
+                                donut: {
+                                    labels: {
+                                        show: true,
+                                        total: {
+                                            show: true,
+                                            label: 'Appointments',
+                                            color: textColor
+                                        },
+                                        value: { color: textColor }
+                                    }
+                                }
+                            }
+                        }
+                    };
+                    appointmentChart = new ApexCharts(document.querySelector("#appointmentChart"), appOptions);
+                    appointmentChart.render();
+
+                    // --- Activity Chart ---
+                    if (activityChart) activityChart.destroy();
+                    const activityOptions = {
+                        ...commonOptions,
+                        series: [{
+                            name: 'Count',
+                            data: chartData.activity.data
+                        }],
+                        chart: { type: 'bar', height: 300, ...commonOptions.chart },
+                        colors: [baseColors.info],
+                        plotOptions: {
+                            bar: {
+                                borderRadius: 4,
+                                horizontal: false,
+                                columnWidth: '40%'
+                            }
+                        },
+                        xaxis: {
+                            categories: chartData.activity.labels,
+                            labels: { style: { colors: textColor } },
+                            axisBorder: { color: gridColor },
+                            axisTicks: { color: gridColor }
+                        },
+                        yaxis: {
+                            labels: { style: { colors: textColor } }
+                        }
+                    };
+                    activityChart = new ApexCharts(document.querySelector("#activityChart"), activityOptions);
+                    activityChart.render();
+                };
+
+                // Initial Render
+                renderCharts();
+
+                // 3. Watch for Theme Changes
+                const observer = new MutationObserver((mutations) => {
+                    mutations.forEach((mutation) => {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'data-bs-theme') {
+                            renderCharts();
+                        }
+                    });
                 });
 
-                // Growth Chart
-                const ctx2 = document.getElementById('growthChart').getContext('2d');
-                new Chart(ctx2, {
-                    type: 'line',
-                    data: {
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-                        datasets: [{
-                            label: 'Active Users',
-                            data: analyticsData.growth,
-                            borderColor: '#6366f1',
-                            tension: 0.4,
-                            fill: true,
-                            backgroundColor: 'rgba(99, 102, 241, 0.1)'
-                        }]
-                    },
-                    options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+                observer.observe(document.documentElement, {
+                    attributes: true,
+                    attributeFilter: ['data-bs-theme']
                 });
-            }
+            });
         </script>
 </body>
 

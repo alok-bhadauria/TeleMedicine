@@ -16,13 +16,14 @@ const initSocket = (server) => {
 
         // Handle Private Message
         socket.on('private_message', (data) => {
-            const { senderId, receiverId, content, senderName } = data;
+            const { senderId, receiverId, content, senderName, attachment } = data;
 
             // Emit to receiver's room
             io.to(receiverId).emit('receive_message', {
                 senderId,
                 content,
                 senderName,
+                attachment,
                 timestamp: new Date()
             });
         });

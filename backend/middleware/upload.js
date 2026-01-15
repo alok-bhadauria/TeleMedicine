@@ -10,13 +10,28 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
-    params: {
-        folder: 'telemedicine_uploads',
-        allowed_formats: ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx'],
-        resource_type: 'auto'
+    params: async (req, file) => {
+        // Default to auto (image/video)
+        let resourceType = 'auto';
+        let public_id = file.originalname.split('.')[0] + '-' + Date.now();
+
+        return {
+            folder: 'telemedicine_uploads',
+            resource_type: 'auto',
+            public_id: public_id
+        };
     }
 });
 
-const parser = multer({ storage: storage });
+const parser = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed!'), false);
+        }
+    }
+});
 
 module.exports = parser;

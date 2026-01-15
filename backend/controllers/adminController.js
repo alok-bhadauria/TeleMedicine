@@ -3,23 +3,42 @@ const User = require('../models/User');
 // Get Admin Stats & Data
 exports.getAdminDashboard = async (req, res) => {
     try {
+        const Appointment = require('../models/Appointment');
+        const Report = require('../models/Report');
+
         const totalDoctors = await User.countDocuments({ role: 'doctor' });
         const totalPatients = await User.countDocuments({ role: 'patient' });
         const pendingDoctors = await User.find({ role: 'doctor', verificationStatus: 'pending' });
 
-        // Analytics Data (Mocked or Real Aggregation)
-        // For real app, use MongoDB aggregation by date. Here we send simple counts.
+        // Appointment Stats
+        const pendingAppointments = await Appointment.countDocuments({ status: { $in: ['pending', 'confirmed'] } });
+        const completedAppointments = await Appointment.countDocuments({ status: 'completed' });
+        const cancelledAppointments = await Appointment.countDocuments({ status: 'cancelled' });
+
+        // Other Stats for 3rd Chart
+        const totalReports = await Report.countDocuments({});
+        const totalAppointments = await Appointment.countDocuments({});
+
         const analyticsData = {
-            roles: [totalPatients, totalDoctors],
-            growth: [10, 15, 20, 25, 30, 35, totalPatients + totalDoctors] // Mock growth data
+            users: {
+                labels: ['Patients', 'Doctors'],
+                data: [totalPatients, totalDoctors]
+            },
+            appointments: {
+                labels: ['Pending/Confirmed', 'Completed', 'Cancelled'],
+                data: [pendingAppointments, completedAppointments, cancelledAppointments]
+            },
+            activity: {
+                labels: ['Total Appointments', 'Total Reports'],
+                data: [totalAppointments, totalReports]
+            }
         };
 
         res.render('pages/dashboards/admin', {
             user: req.user,
             title: 'Admin Dashboard',
             stats: { totalDoctors, totalPatients, pendingCount: pendingDoctors.length },
-            pendingDoctors,
-            analyticsData: JSON.stringify(analyticsData)
+            pendingDoctors
         });
     } catch (err) {
         console.error(err);
@@ -116,5 +135,43 @@ exports.getManageDoctors = async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
+    }
+};
+
+// API: Get Analytics Data JSON
+exports.getAnalyticsData = async (req, res) => {
+    try {
+        const Appointment = require('../models/Appointment');
+        const Report = require('../models/Report');
+
+        const totalDoctors = await User.countDocuments({ role: 'doctor' });
+        const totalPatients = await User.countDocuments({ role: 'patient' });
+
+        const pendingAppointments = await Appointment.countDocuments({ status: { $in: ['pending', 'confirmed'] } });
+        const completedAppointments = await Appointment.countDocuments({ status: 'completed' });
+        const cancelledAppointments = await Appointment.countDocuments({ status: 'cancelled' });
+
+        const totalReports = await Report.countDocuments({});
+        const totalAppointments = await Appointment.countDocuments({});
+
+        const analyticsData = {
+            users: {
+                labels: ['Patients', 'Doctors'],
+                data: [totalPatients, totalDoctors]
+            },
+            appointments: {
+                labels: ['Pending', 'Completed', 'Cancelled'],
+                data: [pendingAppointments, completedAppointments, cancelledAppointments]
+            },
+            activity: {
+                labels: ['Appointments', 'Reports'],
+                data: [totalAppointments, totalReports]
+            }
+        };
+
+        res.json(analyticsData);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server Error' });
     }
 };

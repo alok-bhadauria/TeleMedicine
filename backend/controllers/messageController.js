@@ -1,5 +1,43 @@
 const User = require('../models/User');
 const Message = require('../models/Message');
+const cloudinary = require('cloudinary').v2;
+
+// Helper to generate signed URL for Cloudinary assets (especially raw PDFs)
+const getSignedUrl = (url) => {
+    if (!url || !url.includes('cloudinary.com')) return url;
+
+    try {
+        // Extract public_id and resource_type
+        // URL format: .../resource_type/type/vVersion/folder/file
+        // Example: .../raw/upload/v1234/folder/file.pdf
+        const split = url.split('/upload/');
+        if (split.length < 2) return url;
+
+        let afterUpload = split[1]; // v123/folder/file.pdf or folder/file.pdf
+        const parts = afterUpload.split('/');
+
+        // Remove version if present
+        if (parts[0].startsWith('v') && !isNaN(parseInt(parts[0].substring(1)))) {
+            parts.shift();
+        }
+
+        const publicId = parts.join('/'); // folder/file.pdf
+
+        // Determine resource_type from URL
+        const resourceType = url.includes('/raw/') ? 'raw' : 'image';
+
+        // Generate signed URL
+        return cloudinary.url(publicId, {
+            resource_type: resourceType,
+            type: 'upload',
+            sign_url: true,
+            secure: true
+        });
+    } catch (e) {
+        console.error("Error signing URL:", e);
+        return url;
+    }
+};
 
 // Render Chat Page
 exports.chatPage = async (req, res) => {
@@ -63,6 +101,12 @@ exports.chatPage = async (req, res) => {
         if (req.user.role === 'patient') {
             const Report = require('../models/Report');
             myReports = await Report.find({ patientId: req.user.id }).sort({ uploadedAt: -1 });
+            // Sign URLs for reports
+            myReports = myReports.map(r => {
+                const rObj = r.toObject();
+                rObj.fileUrl = getSignedUrl(rObj.fileUrl);
+                return rObj;
+            });
         }
 
         res.render('pages/messages', {
@@ -116,13 +160,22 @@ exports.getMessages = async (req, res) => {
             ]
         }).sort({ timestamp: 1 }).populate('attachment');
 
+        // Sign attachment URLs
+        const messagesWithSignedUrls = messages.map(m => {
+            const mObj = m.toObject();
+            if (mObj.attachment && mObj.attachment.fileUrl) {
+                mObj.attachment.fileUrl = getSignedUrl(mObj.attachment.fileUrl);
+            }
+            return mObj;
+        });
+
         // Mark messages from this user as read
         await Message.updateMany(
             { senderId: otherUserId, receiverId: currentUserId, read: false },
             { $set: { read: true } }
         );
 
-        res.json(messages);
+        res.json(messagesWithSignedUrls);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Could not fetch messages' });
@@ -141,7 +194,13 @@ exports.sendMessage = async (req, res) => {
         });
         await newMessage.save();
         await newMessage.populate('attachment'); // Populate for immediate return
-        res.json({ success: true, message: newMessage });
+
+        const msgObj = newMessage.toObject();
+        if (msgObj.attachment && msgObj.attachment.fileUrl) {
+            msgObj.attachment.fileUrl = getSignedUrl(msgObj.attachment.fileUrl);
+        }
+
+        res.json({ success: true, message: msgObj });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Failed to send' });

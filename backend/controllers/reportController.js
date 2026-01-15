@@ -1,10 +1,45 @@
 const Report = require('../models/Report');
+
 const User = require('../models/User');
+const cloudinary = require('cloudinary').v2;
+
+// Helper to generate signed URL
+const getSignedUrl = (url) => {
+    if (!url || !url.includes('cloudinary.com')) return url;
+    try {
+        const split = url.split('/upload/');
+        if (split.length < 2) return url;
+        let afterUpload = split[1];
+        const parts = afterUpload.split('/');
+        if (parts[0].startsWith('v') && !isNaN(parseInt(parts[0].substring(1)))) {
+            parts.shift();
+        }
+        const publicId = parts.join('/');
+        const resourceType = url.includes('/raw/') ? 'raw' : 'image';
+        return cloudinary.url(publicId, {
+            resource_type: resourceType,
+            type: 'upload',
+            sign_url: true,
+            secure: true
+        });
+    } catch (e) {
+        console.error("Error signing URL:", e);
+        return url;
+    }
+};
 
 // Get All Reports for User
 exports.getReports = async (req, res) => {
     try {
-        const reports = await Report.find({ patientId: req.user.id }).sort({ uploadedAt: -1 });
+        let reports = await Report.find({ patientId: req.user.id }).sort({ uploadedAt: -1 });
+
+        // Sign URLs
+        reports = reports.map(r => {
+            const rObj = r.toObject();
+            rObj.fileUrl = getSignedUrl(rObj.fileUrl);
+            return rObj;
+        });
+
         res.render('pages/reports', {
             title: 'Medical Reports',
             user: req.user,

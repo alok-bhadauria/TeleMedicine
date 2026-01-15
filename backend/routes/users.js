@@ -23,6 +23,7 @@ router.post('/admin/block', ensureAuthenticated, ensureRole('admin'), adminContr
 router.get('/admin/search', ensureAuthenticated, ensureRole('admin'), adminController.searchUsers);
 router.get('/admin/analytics', ensureAuthenticated, ensureRole('admin'), adminController.getAnalytics);
 router.get('/admin/doctors', ensureAuthenticated, ensureRole('admin'), adminController.getManageDoctors);
+router.get('/admin/chart-data', ensureAuthenticated, ensureRole('admin'), adminController.getAnalyticsData);
 
 // Public/Patient: Find Doctors
 router.get('/doctors', ensureAuthenticated, userController.getAllDoctors);

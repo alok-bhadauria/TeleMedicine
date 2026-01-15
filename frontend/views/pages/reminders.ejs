@@ -26,7 +26,7 @@
         }
 
         .completed-task .task-title {
-            text-decoration: line-through;
+            text-decoration: none;
         }
     </style>
 </head>
@@ -55,11 +55,52 @@
                                 <form action="/reminders/add" method="POST">
                                     <div class="mb-3">
                                         <label class="form-label small fw-bold text-muted">Type</label>
-                                        <select class="form-select bg-light border-0" name="type">
-                                            <option value="Medicine">💊 Medicine</option>
-                                            <option value="Appointment">📅 Appointment</option>
-                                            <option value="General">📝 General</option>
-                                        </select>
+                                        <div class="dropdown">
+                                            <input type="hidden" name="type" id="reminderTypeInput" value="Medicine">
+                                            <button
+                                                class="btn bg-light w-100 d-flex align-items-center justify-content-between border-0 shadow-sm py-2"
+                                                type="button" id="reminderTypeDropdown" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                <span><i class="fas fa-pills text-danger me-2"></i>Medicine</span>
+                                                <i class="fas fa-chevron-down small text-muted"></i>
+                                            </button>
+                                            <ul class="dropdown-menu w-100 border-0 shadow p-1"
+                                                aria-labelledby="reminderTypeDropdown">
+                                                <li>
+                                                    <a class="dropdown-item rounded-2 d-flex align-items-center py-2"
+                                                        href="#"
+                                                        onclick="selectReminderType('Medicine', 'fas fa-pills text-danger'); return false;">
+                                                        <div class="bg-danger bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2"
+                                                            style="width: 32px; height: 32px;">
+                                                            <i class="fas fa-pills text-danger"></i>
+                                                        </div>
+                                                        <span class="fw-bold text-dark">Medicine</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item rounded-2 d-flex align-items-center py-2"
+                                                        href="#"
+                                                        onclick="selectReminderType('Appointment', 'fas fa-calendar-alt text-primary'); return false;">
+                                                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2"
+                                                            style="width: 32px; height: 32px;">
+                                                            <i class="fas fa-calendar-alt text-primary"></i>
+                                                        </div>
+                                                        <span class="fw-bold text-dark">Appointment</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item rounded-2 d-flex align-items-center py-2"
+                                                        href="#"
+                                                        onclick="selectReminderType('General', 'fas fa-sticky-note text-warning'); return false;">
+                                                        <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2"
+                                                            style="width: 32px; height: 32px;">
+                                                            <i class="fas fa-sticky-note text-warning"></i>
+                                                        </div>
+                                                        <span class="fw-bold text-dark">General</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label small fw-bold text-muted">Description</label>
@@ -332,6 +373,12 @@
                 });
             });
             observer.observe(document.documentElement, { attributes: true });
+
+            function selectReminderType(value, iconClass) {
+                document.getElementById('reminderTypeInput').value = value;
+                const btnHtml = `<span><i class="${iconClass} me-2"></i>${value}</span> <i class="fas fa-chevron-down small text-muted"></i>`;
+                document.getElementById('reminderTypeDropdown').innerHTML = btnHtml;
+            }
         </script>
 </body>
 

@@ -3,7 +3,7 @@ const Reminder = require('../models/Reminder');
 // Get Reminders Page
 exports.getRemindersPage = async (req, res) => {
     try {
-        const reminders = await Reminder.find({ userId: req.user._id }).sort({ datetime: 1 });
+        const reminders = await Reminder.find({ userId: req.user._id }).sort({ isCompleted: 1, datetime: 1 });
 
         // Analytics calculations
         const total = reminders.length;
@@ -98,7 +98,7 @@ exports.deleteReminder = async (req, res) => {
 // Get Reminders Data (API for Charts)
 exports.getRemindersData = async (req, res) => {
     try {
-        const reminders = await Reminder.find({ userId: req.user._id }).sort({ datetime: 1 });
+        const reminders = await Reminder.find({ userId: req.user._id }).sort({ isCompleted: 1, datetime: 1 });
         res.json(reminders);
     } catch (err) {
         console.error(err);

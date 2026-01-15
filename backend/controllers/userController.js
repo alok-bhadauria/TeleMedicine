@@ -41,8 +41,20 @@ exports.updateProfile = async (req, res) => {
             };
         }
 
-        if (req.file) {
-            updates.profilePic = req.file.path;
+        if (req.files) {
+            if (req.files.profilePic) {
+                updates.profilePic = req.files.profilePic[0].path;
+            }
+            if (req.files.qualificationImages) {
+                // If it's your first time or you want to append, we need to fetch user first.
+                // But updates object overwrites top level.
+                // Optimally, we push. But simpler: fetch user, push, save.
+                // Here we are using findByIdAndUpdate with $set usually. 
+                // Let's modify approach: fetch user, update fields, save.
+                const user = await User.findById(req.user.id);
+                const newImages = req.files.qualificationImages.map(f => f.path);
+                updates.qualificationImages = user.qualificationImages ? [...user.qualificationImages, ...newImages] : newImages;
+            }
         }
 
         // Remove undefined/empty fields from updates
@@ -55,6 +67,44 @@ exports.updateProfile = async (req, res) => {
         console.error(err);
         req.flash('error_msg', 'Could not update profile');
         res.redirect('/profile');
+    }
+};
+
+// Request Meeting with Admin
+exports.requestMeeting = async (req, res) => {
+    try {
+        const Appointment = require('../models/Appointment');
+        const { date, time, purpose } = req.body;
+
+        // Find Admin User (assuming there is at least one admin)
+        const adminUser = await User.findOne({ role: 'admin' });
+        if (!adminUser) {
+            req.flash('error_msg', 'Admin not found');
+            return res.redirect('/appointments');
+        }
+
+        // Create Appointment Request
+        const newAppt = new Appointment({
+            patientId: adminUser._id, // Admin acts as patient
+            doctorId: req.user.id,
+            date: date,
+            timeSlot: time,
+            status: 'pending',
+            type: 'admin-meeting',
+            symptoms: purpose ? 'Administrative Meeting: ' + purpose : 'Administrative Meeting'
+        });
+
+        await newAppt.save();
+
+        // Also update user status just for legacy checks if needed, but primary is now Appointment
+        await User.findByIdAndUpdate(req.user.id, { meetingRequestStatus: 'pending' });
+
+        req.flash('success_msg', 'Meeting request sent to Admin');
+        res.redirect('/appointments');
+    } catch (err) {
+        console.error(err);
+        req.flash('error_msg', 'Could not send request');
+        res.redirect('/appointments');
     }
 };
 
@@ -164,8 +214,11 @@ exports.getDoctorDashboard = async (req, res) => {
             date: { $gte: startOfDay, $lte: endOfDay }
         });
 
-        // Total Unique Patients
-        const distinctPatients = await Appointment.distinct('patientId', { doctorId: req.user.id });
+        // Total Unique Patients (excluding admin meetings)
+        const distinctPatients = await Appointment.distinct('patientId', {
+            doctorId: req.user.id,
+            type: { $ne: 'admin-meeting' }
+        });
         const totalPatientsCount = distinctPatients.length;
 
         // Recent Requests
@@ -248,7 +301,8 @@ exports.getMyPatients = async (req, res) => {
         appointments.forEach(appt => {
             if (appt.patientId) {
                 const patId = appt.patientId._id.toString();
-                if (!patientsMap.has(patId)) {
+                // Filter out Admin (admin meetings)
+                if (appt.patientId.role !== 'admin' && !patientsMap.has(patId)) {
                     // First time we see this patient (since we sorted desc, this is the latest)
                     const patientData = appt.patientId.toObject();
                     patientData.latestAppointmentId = appt._id;

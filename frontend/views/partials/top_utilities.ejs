@@ -299,19 +299,51 @@
                     });
                 });
 
-                // === 3. Theme Toggle (CSS Icon) - Handled globally in footer.ejs
+                // === 3. Theme Toggle (CSS Icon) ===
+                const themeBtn = document.getElementById('util-theme-btn');
                 const themeIcon = document.getElementById('theme-icon');
-                const isDark = localStorage.getItem('theme') === 'dark';
+                let isDark = localStorage.getItem('theme') === 'dark';
 
-                // Initial sync for icon state if needed (though footer handles it, this ensures consistency)
+                // Initial Sync
                 if (themeIcon) {
                     if (isDark) {
                         themeIcon.classList.remove('fa-sun', 'text-warning');
                         themeIcon.classList.add('fa-moon', 'text-white');
+                        document.documentElement.setAttribute('data-bs-theme', 'dark');
                     } else {
                         themeIcon.classList.remove('fa-moon', 'text-white');
                         themeIcon.classList.add('fa-sun', 'text-warning');
+                        document.documentElement.removeAttribute('data-bs-theme');
                     }
+                }
+
+                // Click Handler
+                if (themeBtn) {
+                    themeBtn.addEventListener('click', () => {
+                        isDark = !isDark;
+
+                        // Animation
+                        if (themeIcon) {
+                            themeIcon.style.transform = 'rotate(360deg)';
+                            setTimeout(() => themeIcon.style.transform = 'rotate(0deg)', 500);
+                        }
+
+                        if (isDark) {
+                            document.documentElement.setAttribute('data-bs-theme', 'dark');
+                            localStorage.setItem('theme', 'dark');
+                            if (themeIcon) {
+                                themeIcon.classList.remove('fa-sun', 'text-warning');
+                                themeIcon.classList.add('fa-moon', 'text-white');
+                            }
+                        } else {
+                            document.documentElement.removeAttribute('data-bs-theme');
+                            localStorage.setItem('theme', 'light');
+                            if (themeIcon) {
+                                themeIcon.classList.remove('fa-moon', 'text-white');
+                                themeIcon.classList.add('fa-sun', 'text-warning');
+                            }
+                        }
+                    });
                 }
 
                 // === 4. Profile Button ===

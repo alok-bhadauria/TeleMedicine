@@ -36,6 +36,8 @@ const UserSchema = new mongoose.Schema({
     isBlocked: { type: Boolean, default: false },
     rating: { type: Number, default: 0 },
     reviews: [ReviewSchema],
+    qualificationImages: [{ type: String }], // Array of Cloudinary URLs
+    meetingRequestStatus: { type: String, enum: ['none', 'pending', 'approved', 'rejected'], default: 'none' },
 
     // Patient Specific
     dob: { type: Date },

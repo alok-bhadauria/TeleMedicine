@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 
 <body>
@@ -60,13 +60,13 @@
                         <div class="col-lg-8">
                             <div class="dash-card p-4 bg-white shadow-sm rounded-4 h-100">
                                 <h5 class="fw-bold text-muted mb-4">Platform Growth (6 Months)</h5>
-                                <canvas id="growthChart" height="300"></canvas>
+                                <div id="growthChart" style="min-height: 365px;"></div>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="dash-card p-4 bg-white shadow-sm rounded-4 h-100">
                                 <h5 class="fw-bold text-muted mb-4">User Distribution</h5>
-                                <canvas id="roleChart" height="300"></canvas>
+                                <div id="roleChart"></div>
                             </div>
                         </div>
                     </div>
@@ -74,7 +74,7 @@
                         <div class="col-lg-12">
                             <div class="dash-card p-4 bg-white shadow-sm rounded-4 h-100">
                                 <h5 class="fw-bold text-muted mb-4">Monthly Active Users Trend</h5>
-                                <canvas id="activeChart" height="150"></canvas>
+                                <div id="activeChart"></div>
                             </div>
                         </div>
                     </div>
@@ -94,53 +94,124 @@
                 };
             }
 
-            const data = <% - analyticsData %>;
+            // Inject analytics data from server-side
+            let analyticsData;
+            try {
+                analyticsData = <% - analyticsData %>;
+                console.log("Analytics Data Success:", analyticsData);
+            } catch (e) {
+                console.error("Analytics Data Injection Failed:", e);
+                analyticsData = { growth: [], roles: [], monthlyActive: [], labels: [] };
+            }
 
-            // Growth Chart (Line)
-            new Chart(document.getElementById('growthChart'), {
-                type: 'line',
-                data: {
-                    labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan'],
-                    datasets: [{
-                        label: 'Total Users',
-                        data: data.growth,
-                        borderColor: '#4f46e5',
-                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: { maintainAspectRatio: false }
-            });
+            // Base Colors & Theme Support
+            const getStyles = () => {
+                const isDark = localStorage.getItem('theme') === 'dark';
+                return {
+                    textColor: isDark ? '#f8f9fa' : '#333333',
+                    gridColor: isDark ? '#444444' : '#e5e7eb',
+                    baseColors: {
+                        primary: '#6366f1',
+                        secondary: '#a855f7',
+                        success: '#22c55e',
+                        info: '#3b82f6',
+                        warning: '#f59e0b',
+                        danger: '#ef4444'
+                    }
+                };
+            };
 
-            // Role Chart (Doughnut)
-            new Chart(document.getElementById('roleChart'), {
-                type: 'doughnut',
-                data: {
+            const renderCharts = () => {
+                const { textColor, gridColor, baseColors } = getStyles();
+                // Ensure data is valid
+                const data = analyticsData || { growth: [], roles: [], monthlyActive: [], labels: [] };
+
+                // Common Options
+                const commonOptions = {
+                    chart: { background: 'transparent', toolbar: { show: false } },
+                    dataLabels: { enabled: false },
+                    stroke: { curve: 'smooth', width: 3 },
+                    legend: { position: 'bottom', labels: { colors: textColor } },
+                    labels: { style: { colors: textColor } }
+                };
+
+                // --- 1. Growth Chart (Area) ---
+                if (window.growthChart) window.growthChart.destroy();
+                const growthOptions = {
+                    ...commonOptions,
+                    series: [{ name: 'Total Users', data: data.growth }],
+                    chart: { type: 'area', height: 350, ...commonOptions.chart },
+                    xaxis: {
+                        categories: data.labels,
+                        labels: { style: { colors: textColor } },
+                        axisBorder: { color: gridColor }
+                    },
+                    yaxis: { labels: { style: { colors: textColor } } },
+                    colors: [baseColors.primary],
+                    fill: {
+                        type: 'gradient',
+                        gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.3 }
+                    }
+                };
+                window.growthChart = new ApexCharts(document.querySelector("#growthChart"), growthOptions);
+                window.growthChart.render();
+
+                // --- 2. Roles Chart (Donut) ---
+                if (window.roleChart) window.roleChart.destroy();
+                const roleOptions = {
+                    ...commonOptions,
+                    series: data.roles,
                     labels: ['Patients', 'Doctors'],
-                    datasets: [{
-                        data: data.roles,
-                        backgroundColor: ['#fbbf24', '#3b82f6'],
-                        borderWidth: 0
-                    }]
-                },
-                options: { maintainAspectRatio: false, cutout: '70%' }
-            });
+                    chart: { type: 'donut', height: 350, ...commonOptions.chart },
+                    colors: [baseColors.info, baseColors.secondary],
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                labels: {
+                                    show: true,
+                                    total: { show: true, label: 'Total Users', color: textColor },
+                                    value: { color: textColor }
+                                }
+                            }
+                        }
+                    }
+                };
+                window.roleChart = new ApexCharts(document.querySelector("#roleChart"), roleOptions);
+                window.roleChart.render();
 
-            // Active Chart (Bar)
-            new Chart(document.getElementById('activeChart'), {
-                type: 'bar',
-                data: {
-                    labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan'],
-                    datasets: [{
-                        label: 'Active Users',
-                        data: data.monthlyActive,
-                        backgroundColor: '#10b981',
-                        borderRadius: 5
-                    }]
-                },
-                options: { maintainAspectRatio: false }
+                // --- 3. Active Users (Bar) ---
+                if (window.activeChart) window.activeChart.destroy();
+                const activeOptions = {
+                    ...commonOptions,
+                    series: [{ name: 'Active Users', data: data.monthlyActive }],
+                    chart: { type: 'bar', height: 350, ...commonOptions.chart },
+                    xaxis: {
+                        categories: data.labels,
+                        labels: { style: { colors: textColor } },
+                        axisBorder: { color: gridColor }
+                    },
+                    yaxis: { labels: { style: { colors: textColor } } },
+                    colors: [baseColors.success],
+                    plotOptions: {
+                        bar: { borderRadius: 4, columnWidth: '50%' }
+                    }
+                };
+                window.activeChart = new ApexCharts(document.querySelector("#activeChart"), activeOptions);
+                window.activeChart.render();
+            };
+
+            // Initial Render
+            renderCharts();
+
+            // Theme Watcher
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'data-bs-theme') {
+                        renderCharts();
+                    }
+                });
             });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-bs-theme'] });
         </script>
 </body>
 

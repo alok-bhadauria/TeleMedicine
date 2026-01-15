@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Doctors</title>
+    <title>Manage Patients</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
@@ -23,61 +23,70 @@
                                 style="width: 45px; height: 45px;">
                                 <i class="fas fa-align-left primary-text fs-5"></i>
                             </button>
-                            <h2 class="fs-2 m-0 text-dark fw-bold">Manage Doctors</h2>
+                            <h2 class="fs-2 m-0 text-dark fw-bold">Manage Patients</h2>
                         </div>
                     </nav>
 
                     <div class="container-fluid px-4">
                         <div class="row">
                             <div class="col-12">
-                                <div class="dash-card p-4 shadow-sm bg-body rounded-4 table-responsive">
+                                <div class="dash-card p-4 shadow-sm bg-body rounded-4 table-responsive border">
                                     <table class="table table-hover align-middle mb-0">
-                                        <thead class="bg-body-tertiary">
+                                        <thead class="bg-body-secondary">
                                             <tr>
                                                 <th
                                                     class="py-3 ps-3 rounded-start text-muted small text-uppercase fw-bold">
                                                     Name</th>
-                                                <th class="py-3 text-muted small text-uppercase fw-bold">Status</th>
-                                                <th class="py-3 text-muted small text-uppercase fw-bold">Access</th>
+                                                <th class="py-3 text-muted small text-uppercase fw-bold">Recent
+                                                    Appointment
+                                                </th>
+                                                <th class="py-3 text-muted small text-uppercase fw-bold">Reports</th>
                                                 <th
                                                     class="py-3 pe-3 rounded-end text-end text-muted small text-uppercase fw-bold">
                                                     Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <% if(doctors.length> 0) { %>
-                                                <% doctors.forEach(doc=> { %>
+                                            <% if(patients.length> 0) { %>
+                                                <% patients.forEach(p=> { %>
                                                     <tr>
                                                         <td class="ps-3 fw-bold text-dark">
                                                             <div class="d-flex align-items-center"
                                                                 style="cursor: pointer;"
-                                                                data-doctor="<%= JSON.stringify(doc) %>"
-                                                                onclick="showDoctorDetails(this.dataset.doctor)">
-                                                                <img src="<%= doc.profilePic %>"
+                                                                data-patient="<%= JSON.stringify(p) %>"
+                                                                onclick="showPatientDetails(this.dataset.patient)">
+                                                                <img src="<%= p.profilePic %>"
                                                                     class="rounded-circle me-2" width="40" height="40"
-                                                                    onerror="this.onerror=null;this.src='/images/doctor-default.png'">
+                                                                    onerror="this.onerror=null;this.src='/images/patient-default.png'">
                                                                 <span class="text-primary text-decoration-underline">
-                                                                    <%= doc.fullName %>
+                                                                    <%= p.fullName %>
                                                                 </span>
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            <span
-                                                                class="badge <%= doc.verificationStatus === 'verified' ? 'bg-success' : 'bg-warning' %> bg-opacity-10 text-dark border">
-                                                                <%= doc.verificationStatus %>
-                                                            </span>
+                                                            <% if(p.lastAppointmentDate) { %>
+                                                                <span class="badge bg-light text-dark border">
+                                                                    <i class="far fa-calendar-alt me-1"></i>
+                                                                    <%= new
+                                                                        Date(p.lastAppointmentDate).toLocaleDateString()
+                                                                        %>
+                                                                </span>
+                                                                <% } else { %>
+                                                                    <span class="text-muted small">No
+                                                                        appointments</span>
+                                                                    <% } %>
                                                         </td>
                                                         <td>
                                                             <span
-                                                                class="badge <%= doc.isBlocked ? 'bg-danger' : 'bg-success' %>">
-                                                                <%= doc.isBlocked ? 'Blocked' : 'Active' %>
+                                                                class="badge bg-info bg-opacity-10 text-info border border-info">
+                                                                <i class="fas fa-file-medical me-1"></i>
+                                                                <%= p.reportCount %>
                                                             </span>
                                                         </td>
                                                         <td class="text-end pe-3">
                                                             <form action="/admin/block" method="POST" class="d-inline">
-                                                                <input type="hidden" name="userId"
-                                                                    value="<%= doc._id %>">
-                                                                <% if(doc.isBlocked) { %>
+                                                                <input type="hidden" name="userId" value="<%= p._id %>">
+                                                                <% if(p.isBlocked) { %>
                                                                     <button type="submit" name="blockStatus"
                                                                         value="false"
                                                                         class="btn btn-sm btn-outline-success rounded-pill px-3 me-1">
@@ -91,18 +100,17 @@
                                                                         </button>
                                                                         <% } %>
                                                             </form>
-                                                            <a href="/messages?to=<%= doc._id %>"
+                                                            <a href="/messages?to=<%= p._id %>"
                                                                 class="btn btn-sm btn-outline-primary rounded-pill px-3">
                                                                 <i class="fas fa-comment small me-1"></i> Message
                                                             </a>
-                                                            <!-- Optional: Suspend/Remove (Mapped to Block or specific verify status) -->
                                                         </td>
                                                     </tr>
                                                     <% }) %>
                                                         <% } else { %>
                                                             <tr>
-                                                                <td colspan="4" class="text-center">No doctors found.
-                                                                </td>
+                                                                <td colspan="4" class="text-center text-muted py-5">No
+                                                                    patients found.</td>
                                                             </tr>
                                                             <% } %>
                                         </tbody>
@@ -114,7 +122,7 @@
             </div>
     </div>
 
-    <%- include('../../partials/doctor_details_modal') %>
+    <%- include('../../partials/patient_details_modal') %>
 
         <script>
             var el = document.getElementById("wrapper");

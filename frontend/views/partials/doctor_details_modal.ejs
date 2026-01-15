@@ -1,0 +1,153 @@
+<!-- Doctor Details Modal -->
+<div class="modal fade" id="doctorDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold" id="modalDoctorName"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="d-flex align-items-center mb-4">
+                    <img id="modalDoctorImg" src="" class="rounded-circle shadow-sm me-4" width="100" height="100"
+                        style="object-fit:cover;">
+                    <div>
+                        <span id="modalDoctorRole"
+                            class="badge bg-primary bg-opacity-10 text-primary mb-2">Doctor</span>
+                        <h4 class="fw-bold text-dark mb-1" id="modalDoctorFullName"></h4>
+                        <p class="text-muted mb-0" id="modalDoctorSpeciality"></p>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-uppercase small text-muted">Qualification</h6>
+                        <p class="text-dark" id="modalDoctorQual"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-uppercase small text-muted">Status</h6>
+                        <span id="modalDoctorStatus" class="badge bg-success bg-opacity-10 text-success">Verified</span>
+                    </div>
+                </div>
+                <div class="row g-4 mt-2">
+                    <div class="col-12">
+                        <h6 class="fw-bold text-uppercase small text-muted">Email</h6>
+                        <p class="text-dark" id="modalDoctorEmail"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-uppercase small text-muted">Mobile Number</h6>
+                        <p class="text-dark" id="modalDoctorMobile"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-uppercase small text-muted">Gender</h6>
+                        <p class="text-dark" id="modalDoctorGender"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-uppercase small text-muted">Date of Birth</h6>
+                        <p class="text-dark" id="modalDoctorDob"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-uppercase small text-muted">Address</h6>
+                        <p class="text-dark" id="modalDoctorAddress"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-uppercase small text-muted">Experience</h6>
+                        <p class="text-dark" id="modalDoctorExperience"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-uppercase small text-muted">Charges</h6>
+                        <p class="text-dark" id="modalDoctorCharges"></p>
+                    </div>
+                    <div class="col-12">
+                        <h6 class="fw-bold text-uppercase small text-muted">Clinic Address</h6>
+                        <!-- reusing address if clinic address is same or if seperate field exists. Using address for now -->
+                        <p class="text-dark" id="modalDoctorClinicAddress"></p>
+                    </div>
+                </div>
+
+                <div class="col-12 mt-4" id="modalDocumentsSection">
+                    <label class="form-label small text-muted fw-bold">Professional Documents</label>
+                    <div class="d-flex flex-wrap gap-2 mt-2" id="modalDoctorDocs">
+                        <!-- Images injected here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+                <a id="modalMessageBtn" href="#" class="btn btn-primary rounded-pill px-4">Message</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showDoctorDetails(docJson) {
+        try {
+            const doc = JSON.parse(docJson);
+
+            // Header
+            document.getElementById('modalDoctorName').textContent = doc.fullName || 'Doctor';
+
+            const img = document.getElementById('modalDoctorImg');
+            img.src = doc.profilePic || '/images/doctor-default.png';
+            img.onerror = function () { this.onerror = null; this.src = '/images/doctor-default.png'; };
+
+            document.getElementById('modalDoctorFullName').textContent = doc.fullName;
+            document.getElementById('modalDoctorSpeciality').textContent = doc.speciality || 'General Physician';
+            document.getElementById('modalDoctorQual').textContent = doc.qualification || 'N/A';
+
+            // Status Badge
+            const statusBadge = document.getElementById('modalDoctorStatus');
+            statusBadge.textContent = doc.verificationStatus;
+            statusBadge.className = doc.verificationStatus === 'verified' ?
+                'badge bg-success bg-opacity-10 text-success' :
+                'badge bg-warning bg-opacity-10 text-dark';
+
+            // Extended Details
+            document.getElementById('modalDoctorEmail').innerText = doc.email || 'N/A';
+            document.getElementById('modalDoctorMobile').innerText = doc.mobileNumber || 'N/A';
+            document.getElementById('modalDoctorGender').innerText = doc.gender || 'N/A';
+            // Format DOB
+            const dob = doc.dob ? new Date(doc.dob).toLocaleDateString() : 'N/A';
+            document.getElementById('modalDoctorDob').innerText = dob;
+
+            document.getElementById('modalDoctorAddress').innerText = doc.address || 'N/A';
+            document.getElementById('modalDoctorClinicAddress').innerText = doc.address || 'Same as Address'; // Assuming address is clinic address for now.
+
+            document.getElementById('modalDoctorExperience').innerText = (doc.experience || '0') + ' Years';
+            document.getElementById('modalDoctorCharges').innerText = '$ ' + (doc.charges || '0') + ' / hr';
+
+            // Documents
+            const docsContainer = document.getElementById('modalDoctorDocs');
+            docsContainer.innerHTML = '';
+
+            if (doc.qualificationImages && doc.qualificationImages.length > 0) {
+                document.getElementById('modalDocumentsSection').style.display = 'block';
+                doc.qualificationImages.forEach(imgUrl => {
+                    const link = document.createElement('a');
+                    link.href = imgUrl;
+                    link.target = '_blank';
+                    link.className = 'd-block border rounded overflow-hidden shadow-sm zoom-hover';
+                    link.style.width = '80px';
+                    link.style.height = '80px';
+
+                    const thumb = document.createElement('img');
+                    thumb.src = imgUrl;
+                    thumb.className = 'w-100 h-100';
+                    thumb.style.objectFit = 'cover';
+
+                    link.appendChild(thumb);
+                    docsContainer.appendChild(link);
+                });
+            } else {
+                document.getElementById('modalDocumentsSection').style.display = 'none';
+            }
+
+            document.getElementById('modalMessageBtn').href = `/messages?to=${doc._id}`;
+
+            var modal = new bootstrap.Modal(document.getElementById('doctorDetailsModal'));
+            modal.show();
+        } catch (e) {
+            console.error('Error parsing doctor data', e);
+        }
+    }
+</script>

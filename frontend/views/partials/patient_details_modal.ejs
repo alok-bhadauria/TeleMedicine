@@ -1,0 +1,110 @@
+<!-- Patient Details Modal -->
+<div class="modal fade" id="patientDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Patient Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="text-center mb-4">
+                    <img id="modalPatientImg" src="/images/patient-default.png" class="rounded-circle shadow-sm mb-3"
+                        width="100" height="100" style="object-fit: cover;">
+                    <h4 id="modalPatientName" class="fw-bold mb-1"></h4>
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">Patient</span>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="p-3 bg-light rounded-3 h-100">
+                            <label class="small text-muted text-uppercase fw-bold mb-1">Email</label>
+                            <p id="modalPatientEmail" class="mb-0 fw-medium text-break"></p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 bg-light rounded-3 h-100">
+                            <label class="small text-muted text-uppercase fw-bold mb-1">Mobile</label>
+                            <p id="modalPatientMobile" class="mb-0 fw-medium"></p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 bg-light rounded-3 h-100">
+                            <label class="small text-muted text-uppercase fw-bold mb-1">Gender</label>
+                            <p id="modalPatientGender" class="mb-0 fw-medium"></p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 bg-light rounded-3 h-100">
+                            <label class="small text-muted text-uppercase fw-bold mb-1">Date of Birth</label>
+                            <p id="modalPatientDob" class="mb-0 fw-medium"></p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 bg-light rounded-3 h-100">
+                            <label class="small text-muted text-uppercase fw-bold mb-1">Blood Group</label>
+                            <p id="modalPatientBlood" class="mb-0 fw-medium"></p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 bg-light rounded-3 h-100">
+                            <label class="small text-muted text-uppercase fw-bold mb-1">Reports Uploaded</label>
+                            <p id="modalPatientReports" class="mb-0 fw-medium"></p>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="p-3 bg-light rounded-3">
+                            <label class="small text-muted text-uppercase fw-bold mb-1">Address</label>
+                            <p id="modalPatientAddress" class="mb-0 fw-medium"></p>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="p-3 bg-light rounded-3">
+                            <label class="small text-muted text-uppercase fw-bold mb-1">Recent Appointment</label>
+                            <p id="modalPatientLastAppt" class="mb-0 fw-medium"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button class="btn btn-outline-primary rounded-pill" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showPatientDetails(patientJson) {
+        const p = JSON.parse(patientJson);
+
+        document.getElementById('modalPatientName').textContent = p.fullName;
+
+        const img = document.getElementById('modalPatientImg');
+        img.src = p.profilePic || '/images/patient-default.png';
+        img.onerror = function () { this.onerror = null; this.src = '/images/patient-default.png'; };
+
+        document.getElementById('modalPatientEmail').textContent = p.email || '-';
+        document.getElementById('modalPatientMobile').textContent = p.mobileNumber || '-';
+        document.getElementById('modalPatientGender').textContent = p.gender || '-';
+
+        // Format DoB
+        if (p.dob) {
+            document.getElementById('modalPatientDob').textContent = new Date(p.dob).toLocaleDateString();
+        } else {
+            document.getElementById('modalPatientDob').textContent = '-';
+        }
+
+        document.getElementById('modalPatientBlood').textContent = p.bloodGroup || '-';
+        document.getElementById('modalPatientAddress').textContent = p.address || '-';
+        document.getElementById('modalPatientReports').textContent = p.reportCount || '0';
+
+        if (p.lastAppointmentDate) {
+            document.getElementById('modalPatientLastAppt').textContent = new Date(p.lastAppointmentDate).toLocaleDateString() + ' ' + new Date(p.lastAppointmentDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        } else {
+            document.getElementById('modalPatientLastAppt').textContent = 'No appointments';
+        }
+
+        const modal = new bootstrap.Modal(document.getElementById('patientDetailsModal'));
+        modal.show();
+    }
+</script>

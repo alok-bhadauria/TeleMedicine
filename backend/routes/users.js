@@ -23,6 +23,7 @@ router.post('/admin/block', ensureAuthenticated, ensureRole('admin'), adminContr
 router.get('/admin/search', ensureAuthenticated, ensureRole('admin'), adminController.searchUsers);
 router.get('/admin/analytics', ensureAuthenticated, ensureRole('admin'), adminController.getAnalytics);
 router.get('/admin/doctors', ensureAuthenticated, ensureRole('admin'), adminController.getManageDoctors);
+router.get('/admin/patients', ensureAuthenticated, ensureRole('admin'), adminController.getManagePatients);
 router.get('/admin/chart-data', ensureAuthenticated, ensureRole('admin'), adminController.getAnalyticsData);
 
 // Public/Patient: Find Doctors
@@ -33,14 +34,17 @@ router.get('/patients', ensureAuthenticated, ensureRole('doctor'), userControlle
 
 // Profile
 router.get('/profile', ensureAuthenticated, userController.getProfile);
+// Profile Update (handle multiple files)
 router.post('/profile/update', ensureAuthenticated, (req, res, next) => {
-    upload.single('profilePic')(req, res, (err) => {
+    upload.fields([
+        { name: 'profilePic', maxCount: 1 },
+        { name: 'qualificationImages', maxCount: 5 }
+    ])(req, res, (err) => {
         if (err) {
-            console.error("Profile Upload Error:", err);
-            // Handle Multer/Cloudinary errors gracefully
-            let message = 'Error uploading image.';
-            if (err.message) message = err.message;
+            console.error("Upload Error:", err);
+            let message = 'Error uploading files.';
             if (err instanceof multer.MulterError) message = err.message;
+            else if (err.message) message = err.message;
 
             req.flash('error_msg', message);
             return res.redirect('/profile');
@@ -48,6 +52,13 @@ router.post('/profile/update', ensureAuthenticated, (req, res, next) => {
         next();
     });
 }, userController.updateProfile);
+
+// Doctor: Request Meeting
+router.post('/doctor/request-meeting', ensureAuthenticated, ensureRole('doctor'), userController.requestMeeting);
+
+// Admin: Meetings
+router.get('/admin/meetings', ensureAuthenticated, ensureRole('admin'), adminController.getMeetingRequests);
+router.post('/admin/meeting-action', ensureAuthenticated, ensureRole('admin'), adminController.handleMeetingAction);
 router.post('/profile/change-password', ensureAuthenticated, userController.changePassword);
 
 // New Patient Pages

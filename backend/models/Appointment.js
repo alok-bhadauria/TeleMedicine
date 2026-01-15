@@ -12,6 +12,7 @@ const AppointmentSchema = new mongoose.Schema({
     },
     meetingLink: { type: String }, // Jitsi Meet URL
     symptoms: { type: String },
+    type: { type: String, enum: ['regular', 'admin-meeting'], default: 'regular' },
     notes: { type: String },
     sharedReports: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Report' }],
     createdAt: { type: Date, default: Date.now }
